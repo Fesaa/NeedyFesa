@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "needyfesa",
+  "version": "${version}",
+
+  "name": "NeedyFesa",
+  "description": "Fesa's hot specific cool mod ty Danny & Alex",
+  "authors": [
+    "Me!"
+  ],
+  "contact": {
+    "homepage": "https://github.com/Fesaa",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/needyfesa/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "fesa.needyfesa.NeedyFesa"
+    ]
+  },
+  "mixins": [
+    "needyfesa.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.9",
+    "fabric-api": "*",
+    "minecraft": "~1.19",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
