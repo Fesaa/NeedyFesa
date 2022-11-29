@@ -11,6 +11,7 @@ ___
 * EggWars map layout
 * AutoVote (in working)
 * Chest finder
+* NameTag in Third Person
 * more??? 
 
 ___
