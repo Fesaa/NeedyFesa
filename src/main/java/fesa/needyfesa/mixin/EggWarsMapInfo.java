@@ -32,7 +32,7 @@ public class EggWarsMapInfo {
                 assert MinecraftClient.getInstance().player != null;
                 String unformatted = Objects.requireNonNull(MinecraftClient.getInstance().player.getDisplayName().getStyle().getColor()).getName();
 
-                StringBuilder Colour = new StringBuilder("");
+                StringBuilder Colour = new StringBuilder();
 
                 for (String s: unformatted.replace("_", " ").split(" ")) {
                     Colour.append(s.substring(0, 1).toUpperCase());
@@ -100,20 +100,20 @@ public class EggWarsMapInfo {
         JsonObject MapInfo = NeedyFesa.mapInfo.get("teamColourOrder").getAsJsonObject().get(mapName).getAsJsonObject();
 
         if (MapInfo.get("style").getAsString().equals("cross")) {
-            return MakeMapLayoutCross(mapName, teamColour, MapInfo);
+            return MakeMapLayoutCross(teamColour, MapInfo);
         }
 
         if (MapInfo.get("style").getAsString().equals("square")) {
-            return MakeMapLayoutSquare(mapName, teamColour, MapInfo);
+            return MakeMapLayoutSquare(teamColour, MapInfo);
         }
 
         return null;
     }
 
-    private ArrayList<String> MakeMapLayoutCross(String mapName, String teamColour, JsonObject mapInfo) {
+    private ArrayList<String> MakeMapLayoutCross(String teamColour, JsonObject mapInfo) {
 
         JsonArray mapLayout = mapInfo.get("layout").getAsJsonArray();
-        ArrayList<String> formattedMapLayout = new ArrayList<String>();
+        ArrayList<String> formattedMapLayout = new ArrayList<>();
         int teamIndex = -1;
         for (int i = 0; i < mapLayout.size(); i++) {
             formattedMapLayout.add(mapLayout.get(i).getAsString());
@@ -139,14 +139,14 @@ public class EggWarsMapInfo {
                             .append("&r. In Front: ").append(colourToCubeColour.get(teamBefore)).append(teamBefore)
                             .append("&r.");
 
-        ArrayList<String> out = new ArrayList<String>();
+        ArrayList<String> out = new ArrayList<>();
         out.add(mapLayoutString);
         out.add(String.valueOf(partyMapLayoutString));
 
         return out;
     }
 
-    private ArrayList<String> MakeMapLayoutSquare(String mapName, String teamColour, JsonObject mapInfo) {
+    private ArrayList<String> MakeMapLayoutSquare(String teamColour, JsonObject mapInfo) {
 
         JsonArray mapLayout = mapInfo.get("layout").getAsJsonArray();
         int teamIndexSide = -1;
@@ -187,7 +187,7 @@ public class EggWarsMapInfo {
                             .append("&r Side & Across: ").append(colourToCubeColour.get(teamSideAcross)).append(teamSideAcross)
                             .append("&r.");
 
-        ArrayList<String> out = new ArrayList<String>();
+        ArrayList<String> out = new ArrayList<>();
         out.add(mapLayoutString);
         out.add(String.valueOf(partyMapLayoutString));
 
