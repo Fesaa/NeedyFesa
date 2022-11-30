@@ -64,6 +64,7 @@ public class NeedyFesa implements ModInitializer {
 				ChestFinder.chestRequest(10);
 			}
 		});
+		JsonReload();
 		LOGGER.info("NeedyFesa started succesfullt. \nHELLO CUTIES <3333");
 	}
 
