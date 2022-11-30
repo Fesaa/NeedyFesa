@@ -17,7 +17,7 @@ public class CustomCommands {
     public void sendMessage(String msg, boolean addToHistory, CallbackInfoReturnable callbackInfoReturnable) {
 
         if (msg.equals("/needyfesa reload")) {
-            NeedyFesa.JsonFarm();
+            NeedyFesa.JsonReload();
             cancelMsg(callbackInfoReturnable);
         }
 

@@ -13,8 +13,7 @@ import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 
 public class NeedyFesa implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("needyfesa");
@@ -31,7 +30,32 @@ public class NeedyFesa implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		JsonFarm();
+
+		// Getting, checking & correcting config
+		File configDir = new File("./config/NeedyFesa");
+		if (configDir.mkdirs()) {
+			LOGGER.warn("Config directory was not present; I made it. Bug? Or first time using the NeedyFesa mod?");
+		}
+
+		File staticLobbyChestLocationsJson = new File("./config/NeedyFesa/staticLobbyChestLocations.json");
+		File staticAutoMessagesJson = new File("./config/NeedyFesa/staticAutoMessages.json");
+		File mapInfoJson = new File("./config/NeedyFesa/EggWarsMapInfo.json");
+
+		if (!staticLobbyChestLocationsJson.exists()) {
+			initChestLocations(staticLobbyChestLocationsJson.getPath());
+			LOGGER.warn("Config file, " + staticLobbyChestLocationsJson.getName() + ", was not present; I made one. Bug? Or first time using the NeedyFesa mod?");
+		}
+
+		if (!staticAutoMessagesJson.exists()) {
+			initAutoMessages(staticAutoMessagesJson.getPath());
+			LOGGER.warn("Config file, " + staticAutoMessagesJson.getName() + ", was not present; I made one. Bug? Or first time using the NeedyFesa mod?");
+		}
+
+		if (!mapInfoJson.exists()) {
+			initMapInfo(mapInfoJson.getPath());
+			LOGGER.warn("Config file, " + mapInfoJson.getName() + ", was not present; I made one. Bug? Or first time using the NeedyFesa mod?");
+		}
+
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (autoVoteEggWarsKeyBind.wasPressed()) {
 				AutoVoteEggWars.run();
@@ -40,10 +64,59 @@ public class NeedyFesa implements ModInitializer {
 				ChestFinder.chestRequest(10);
 			}
 		});
-		LOGGER.info("HELLO CUTIES <3333");
+		LOGGER.info("NeedyFesa started succesfullt. \nHELLO CUTIES <3333");
 	}
 
-	public static void JsonFarm() {
+	private static void initMapInfo(String pathname) {
+		JsonObject mapInfo = new JsonObject();
+
+		mapInfo.add("teamColourOrder", new JsonObject());
+		mapInfo.add("teamBuildLimit", new JsonObject());
+
+		try {
+			FileWriter file = new FileWriter(pathname);
+			file.write(mapInfo.toString());
+			file.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void initAutoMessages(String pathname) {
+		JsonArray autoMessagesJson = new JsonArray();
+
+		JsonObject autoMessagesExample = new JsonObject();
+		autoMessagesExample.addProperty("regex", "");
+		autoMessagesExample.addProperty("msg", "");
+		autoMessagesExample.addProperty("command", false);
+		autoMessagesExample.addProperty("chat", false);
+		autoMessagesExample.addProperty("sound", false);
+		autoMessagesExample.addProperty("sound_id", "");
+
+		autoMessagesJson.add(autoMessagesExample);
+
+		try {
+			FileWriter file = new FileWriter(pathname);
+			file.write(autoMessagesJson.toString());
+			file.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void initChestLocations(String pathname){
+		JsonArray chestLocations = new JsonArray();
+		try {
+			FileWriter file = new FileWriter(pathname);
+			file.write(chestLocations.toString());
+			file.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public static void JsonReload() {
 		try {
 			staticLobbyChestLocations = (new Gson()).fromJson(new FileReader("./config/NeedyFesa/staticLobbyChestLocations.json"), JsonArray.class);
 		} catch (FileNotFoundException e) {
