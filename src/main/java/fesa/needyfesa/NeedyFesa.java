@@ -65,7 +65,7 @@ public class NeedyFesa implements ModInitializer {
 			}
 		});
 		JsonReload();
-		LOGGER.info("NeedyFesa started succesfullt. \nHELLO CUTIES <3333");
+		LOGGER.info("NeedyFesa started successfully. \nHELLO CUTIES <3333");
 	}
 
 	private static void initMapInfo(String pathname) {
