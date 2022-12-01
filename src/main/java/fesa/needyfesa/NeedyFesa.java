@@ -24,10 +24,9 @@ public class NeedyFesa implements ModInitializer {
 	public static BlockPos currentChestCoords = null;
 	public static JsonArray staticLobbyChestLocations;
 	public static JsonArray staticAutoMessages;
+	public static JsonArray staticReplaceMessages;
 	public static  JsonObject mapInfo;
 	private static final KeyBinding chestFinderKeyBind = KeyBindingHelper.registerKeyBinding(new KeyBinding("chestfinder", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_7, "needyfesa"));
-	private static final KeyBinding autoVoteEggWarsKeyBind = KeyBindingHelper.registerKeyBinding(new KeyBinding("autovoteeggwars", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_8, "needyfesa"));
-
 	@Override
 	public void onInitialize() {
 
@@ -39,7 +38,9 @@ public class NeedyFesa implements ModInitializer {
 
 		File staticLobbyChestLocationsJson = new File("./config/NeedyFesa/staticLobbyChestLocations.json");
 		File staticAutoMessagesJson = new File("./config/NeedyFesa/staticAutoMessages.json");
+		File staticReplaceMessagesJson = new File("./config/NeedyFesa/staticReplaceMessages.json");
 		File mapInfoJson = new File("./config/NeedyFesa/EggWarsMapInfo.json");
+
 
 		if (!staticLobbyChestLocationsJson.exists()) {
 			initChestLocations(staticLobbyChestLocationsJson.getPath());
@@ -51,21 +52,40 @@ public class NeedyFesa implements ModInitializer {
 			LOGGER.warn("Config file, " + staticAutoMessagesJson.getName() + ", was not present; I made one. Bug? Or first time using the NeedyFesa mod?");
 		}
 
+		if (!staticReplaceMessagesJson.exists()) {
+			initReplaceMessagesJson(staticReplaceMessagesJson.getPath());
+			LOGGER.warn("Config file, " + staticReplaceMessagesJson.getName() + ", was not present; I made one. Bug? Or first time using the NeedyFesa mod?");
+		}
+
 		if (!mapInfoJson.exists()) {
 			initMapInfo(mapInfoJson.getPath());
 			LOGGER.warn("Config file, " + mapInfoJson.getName() + ", was not present; I made one. Bug? Or first time using the NeedyFesa mod?");
 		}
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			while (autoVoteEggWarsKeyBind.wasPressed()) {
-				AutoVoteEggWars.run();
-			}
 			while (chestFinderKeyBind.wasPressed()) {
 				ChestFinder.chestRequest(10);
 			}
 		});
 		JsonReload();
 		LOGGER.info("NeedyFesa started successfully. \nHELLO CUTIES <3333");
+	}
+
+	private static void initReplaceMessagesJson(String pathname) {
+		JsonArray replaceMessagesJson = new JsonArray();
+
+		JsonObject replaceMessageExample = new JsonObject();
+		replaceMessageExample.addProperty("text", "");
+		replaceMessageExample.addProperty("msg", "");
+
+		replaceMessagesJson.add(replaceMessageExample);
+		try {
+			FileWriter file = new FileWriter(pathname);
+			file.write(replaceMessagesJson.toString());
+			file.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static void initMapInfo(String pathname) {
@@ -128,6 +148,12 @@ public class NeedyFesa implements ModInitializer {
 			staticAutoMessages = (new Gson()).fromJson(new FileReader("./config/NeedyFesa/staticAutoMessages.json"), JsonArray.class);
 		} catch (FileNotFoundException e) {
 			LOGGER.error("staticAutoMessages.json was not found! Needyfesa might not work as expected.");
+			e.printStackTrace();
+		}
+		try {
+			staticReplaceMessages = (new Gson()).fromJson(new FileReader("./config/NeedyFesa/staticReplaceMessages.json"), JsonArray.class);
+		} catch (FileNotFoundException e) {
+			LOGGER.error("staticReplaceMessages.json was not found! Needyfesa might not work as expected.");
 			e.printStackTrace();
 		}
 		try {

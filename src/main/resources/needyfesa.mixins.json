@@ -3,13 +3,12 @@
   "minVersion": "0.8",
   "package": "fesa.needyfesa.mixin",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [
-  ],
   "client": [
     "AutoMessages",
     "CustomCommands",
     "EggWarsMapInfo",
-    "NameTagMixin"
+    "NameTagMixin",
+    "ReplaceMessages"
   ],
   "injectors": {
     "defaultRequire": 1
