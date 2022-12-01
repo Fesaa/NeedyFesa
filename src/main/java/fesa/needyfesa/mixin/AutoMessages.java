@@ -1,7 +1,6 @@
 package fesa.needyfesa.mixin;
 
 import com.google.gson.JsonObject;
-import fesa.needyfesa.AutoVoteEggWars;
 import fesa.needyfesa.ChestFinder;
 import fesa.needyfesa.NeedyFesa;
 import net.minecraft.client.MinecraftClient;
@@ -94,7 +93,6 @@ public class AutoMessages {
 					}
 					lastEntry = scoreboardPlayerScore;
 				}
-				//AutoVoteEggWars.run();
 			}
 		}
 	}
