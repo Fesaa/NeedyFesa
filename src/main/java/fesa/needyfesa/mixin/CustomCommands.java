@@ -18,13 +18,13 @@ public class CustomCommands {
 
         if (msg.equals("/needyfesa reload")) {
             NeedyFesa.JsonReload();
-            cancelMsg(callbackInfoReturnable);
+            cancelMsg(callbackInfoReturnable, msg);
         }
 
         if (msg.equalsIgnoreCase("/needyfesa logparty")) {
             NeedyFesa.logParty = !NeedyFesa.logParty;
             MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("\u00A7bUpdated logParty to " + NeedyFesa.logParty));
-            cancelMsg(callbackInfoReturnable);
+            cancelMsg(callbackInfoReturnable, msg);
         }
 
         if (msg.equals("/needyfesa debug")) {
@@ -38,12 +38,13 @@ public class CustomCommands {
                 s += "\ncurrentChestCoords: " + NeedyFesa.currentChestCoords.toShortString();
             }
             MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(s + "\n"));
-            cancelMsg(callbackInfoReturnable);
+            cancelMsg(callbackInfoReturnable, msg);
         }
 
     }
 
-    private void cancelMsg(CallbackInfoReturnable callbackInfoReturnable) {
+    private void cancelMsg(CallbackInfoReturnable callbackInfoReturnable, String msg) {
+        MinecraftClient.getInstance().inGameHud.getChatHud().addToMessageHistory(msg);
         MinecraftClient.getInstance().setScreen(null);
         callbackInfoReturnable.cancel();
     }
