@@ -27,9 +27,15 @@ public class CustomCommands {
             cancelMsg(callbackInfoReturnable, msg);
         }
 
+        if (msg.equalsIgnoreCase("/needyfesa partyStatus")) {
+            NeedyFesa.partyStatus = !NeedyFesa.partyStatus;
+            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("\u00A7bUpdated partyStatus to " + NeedyFesa.partyStatus));
+            cancelMsg(callbackInfoReturnable, msg);
+        }
+
         if (msg.equals("/needyfesa debug")) {
             String s = "";
-            s += "Debug info for Needyfesa";
+            s += "\nDebug info for Needyfesa";
             s += "\nlogParty: " + NeedyFesa.logParty;
             s += "\neggWarsMap: " + NeedyFesa.eggWarsMap;
             s += "\npartyStatus: " + NeedyFesa.partyStatus;
