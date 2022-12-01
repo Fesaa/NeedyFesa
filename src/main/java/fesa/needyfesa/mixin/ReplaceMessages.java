@@ -16,6 +16,7 @@ public class ReplaceMessages {
 
     @Inject(at = @At("HEAD"), method = "sendMessage", cancellable = true)
     public void sendMessage(String msg, boolean addToHistory, CallbackInfoReturnable callbackInfoReturnable) {
+        String originalMessage = msg;
         for (int i = 0; i < NeedyFesa.staticReplaceMessages.size(); i++) {
             JsonObject replaceMessage = NeedyFesa.staticReplaceMessages.get(i).getAsJsonObject();
             if (msg.contains(replaceMessage.get("text").getAsString())) {
@@ -24,7 +25,7 @@ public class ReplaceMessages {
         }
         MinecraftClient mc = MinecraftClient.getInstance();
         ClientPlayerEntity p = mc.player;
-        if (p != null) {
+        if (p != null && !msg.equals(originalMessage)) {
             p.sendChatMessage(msg, Text.of(msg));
             mc.inGameHud.getChatHud().addToMessageHistory(msg);
             mc.setScreen(null);
