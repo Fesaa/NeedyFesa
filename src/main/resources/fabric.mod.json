@@ -4,13 +4,14 @@
   "version": "${version}",
 
   "name": "NeedyFesa",
-  "description": "Fesa's hot specific cool mod ty Danny & Alex",
+  "description": "Fesa's hot specific cool mod that does some stuff. Might crash your game cause I can't code (✿◠‿◠)",
   "authors": [
-    "Me!"
+    "Fesa",
+    "Enchanted Games ~ NameTag"
   ],
   "contact": {
     "homepage": "https://github.com/Fesaa",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "sources": "https://github.com/Fesaa/NeedyFesa"
   },
 
   "license": "CC0-1.0",
