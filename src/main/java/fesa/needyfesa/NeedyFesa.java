@@ -17,16 +17,20 @@ import java.io.*;
 
 public class NeedyFesa implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("needyfesa");
-	public static boolean partyStatus  = false;
-	public static boolean logParty  = false;
-	public static String eggWarsMap  = "";
-	public static int chestPartyAnnounce  = 0;
+	public static boolean partyStatus = false;
+	public static boolean logParty = false;
+	public static String eggWarsMap = "";
+	public static String teamColour = "";
+	public static int chestPartyAnnounce = 0;
 	public static BlockPos currentChestCoords = null;
 	public static JsonArray staticLobbyChestLocations;
 	public static JsonArray staticAutoMessages;
 	public static JsonArray staticReplaceMessages;
-	public static  JsonObject mapInfo;
-	private static final KeyBinding chestFinderKeyBind = KeyBindingHelper.registerKeyBinding(new KeyBinding("chestfinder", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_7, "needyfesa"));
+	public static JsonObject mapInfo;
+	public static JsonObject needyFesaConfig;
+	private static final KeyBinding chestFinderKeyBind = KeyBindingHelper.registerKeyBinding(new KeyBinding("Chest Finder", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_7, "NeedyFesa"));
+	private static final KeyBinding autoVoteKeyBind  = KeyBindingHelper.registerKeyBinding(new KeyBinding("Auto Vote [EggWars]", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_8, "NeedyFesa"));
+	private static final KeyBinding mapInfoKeyBind  = KeyBindingHelper.registerKeyBinding(new KeyBinding("Map Info", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_9, "NeedyFesa"));
 	@Override
 	public void onInitialize() {
 
@@ -40,6 +44,7 @@ public class NeedyFesa implements ModInitializer {
 		File staticAutoMessagesJson = new File("./config/NeedyFesa/staticAutoMessages.json");
 		File staticReplaceMessagesJson = new File("./config/NeedyFesa/staticReplaceMessages.json");
 		File mapInfoJson = new File("./config/NeedyFesa/EggWarsMapInfo.json");
+		File needyFesaConfigJson = new File("./config/NeedyFesa/needyFesaConfig.json");
 
 
 		if (!staticLobbyChestLocationsJson.exists()) {
@@ -62,13 +67,41 @@ public class NeedyFesa implements ModInitializer {
 			LOGGER.warn("Config file, " + mapInfoJson.getName() + ", was not present; I made one. Bug? Or first time using the NeedyFesa mod?");
 		}
 
+		if (!needyFesaConfigJson.exists()) {
+			initNeedyFesaConfigJson(needyFesaConfigJson.getPath());
+			LOGGER.warn("Config file, " + needyFesaConfigJson.getName() + ", was not present; I made one. Bug? Or first time using the NeedyFesa mod?");
+		}
+
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (chestFinderKeyBind.wasPressed()) {
 				ChestFinder.chestRequest(10);
 			}
+			while (autoVoteKeyBind.wasPressed()) {
+				AutoVoteEggWars.run(NeedyFesa.needyFesaConfig.get("minWaitTime").getAsInt());
+			}
+			while (mapInfoKeyBind.wasPressed()) {
+				EggWarsMapInfo.handleRequest(eggWarsMap, teamColour, false);
+			}
 		});
 		JsonReload();
 		LOGGER.info("NeedyFesa started successfully. \nHELLO CUTIES <3333");
+	}
+
+	private static void initNeedyFesaConfigJson(String pathname) {
+		JsonObject needyFesaConfigJson = new JsonObject();
+		needyFesaConfigJson.addProperty("autoVote", true);
+		needyFesaConfigJson.addProperty("minWaitTime", 50);
+		needyFesaConfigJson.addProperty("maxWaitTime", 1000);
+		needyFesaConfigJson.addProperty("itemVote", 16);
+		needyFesaConfigJson.addProperty("healthVote", 10);
+
+		try {
+			FileWriter file = new FileWriter(pathname);
+			file.write(needyFesaConfigJson.toString());
+			file.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static void initReplaceMessagesJson(String pathname) {
@@ -160,6 +193,12 @@ public class NeedyFesa implements ModInitializer {
 			mapInfo = (new Gson()).fromJson(new FileReader("./config/NeedyFesa/EggWarsMapInfo.json"), JsonObject.class);
 		} catch (FileNotFoundException e) {
 			LOGGER.error("EggWarsMapInfo.json was not found! Needyfesa might not work as expected.");
+			e.printStackTrace();
+		}
+		try {
+			needyFesaConfig = (new Gson()).fromJson(new FileReader("./config/NeedyFesa/needyFesaConfig.json"), JsonObject.class);
+		} catch (FileNotFoundException e) {
+			LOGGER.error("needyFesaConfig.json was not found! Needyfesa might not work as expected.");
 			e.printStackTrace();
 		}
 	}

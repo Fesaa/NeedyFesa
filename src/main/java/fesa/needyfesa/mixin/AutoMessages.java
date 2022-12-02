@@ -1,6 +1,7 @@
 package fesa.needyfesa.mixin;
 
 import com.google.gson.JsonObject;
+import fesa.needyfesa.AutoVoteEggWars;
 import fesa.needyfesa.ChestFinder;
 import fesa.needyfesa.NeedyFesa;
 import net.minecraft.client.MinecraftClient;
@@ -90,8 +91,12 @@ public class AutoMessages {
 					if (scoreboardPlayerScore.getPlayerName().contains("Map:")) {
 						assert lastEntry != null;
 						NeedyFesa.eggWarsMap = lastEntry.getPlayerName().substring(2);
+						break;
 					}
 					lastEntry = scoreboardPlayerScore;
+				}
+				if (NeedyFesa.needyFesaConfig.get("autoVote").getAsBoolean()) {
+					AutoVoteEggWars.run(NeedyFesa.needyFesaConfig.get("minWaitTime").getAsInt());
 				}
 			}
 		}

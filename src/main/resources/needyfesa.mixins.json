@@ -6,7 +6,7 @@
   "client": [
     "AutoMessages",
     "CustomCommands",
-    "EggWarsMapInfo",
+    "EggWarsMapInfoMixin",
     "NameTagMixin",
     "ReplaceMessages"
   ],

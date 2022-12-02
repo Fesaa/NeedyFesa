@@ -1,52 +1,20 @@
-package fesa.needyfesa.mixin;
+package fesa.needyfesa;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import fesa.needyfesa.NeedyFesa;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.text.Text;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
-@Mixin(ClientPlayNetworkHandler.class)
 public class EggWarsMapInfo {
 
     private static final String teamFiller = "||||||";
     private static HashMap<String, String> colourToUnicode;
     private static HashMap<String, String> colourToCubeColour;
 
-
-    @ModifyArg(method = "onTitle", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;setTitle(Lnet/minecraft/text/Text;)V"))
-    public Text onTitle(Text title) {
-        assert MinecraftClient.getInstance().world != null;
-        ClientWorld world = MinecraftClient.getInstance().world;
-        ScoreboardObjective currentScoreboard = world.getScoreboard().getObjectiveForSlot(1);
-        if (currentScoreboard != null) {
-            if (currentScoreboard.getDisplayName().getString().contains("Team EggWars") && title.toString().contains("8")) {
-                assert MinecraftClient.getInstance().player != null;
-                String unformatted = Objects.requireNonNull(MinecraftClient.getInstance().player.getDisplayName().getStyle().getColor()).getName();
-
-                StringBuilder Colour = new StringBuilder();
-                for (String s: unformatted.replace("_", " ").split(" ")) {
-                    Colour.append(s.substring(0, 1).toUpperCase());
-                    Colour.append(s.substring(1));
-                    Colour.append(" ");
-                }
-                HandleRequest(NeedyFesa.eggWarsMap, String.valueOf(Colour).stripTrailing(), NeedyFesa.partyStatus && NeedyFesa.logParty);
-            }
-        }
-        return title;
-    }
-
-    private void HandleRequest(String mapName, String teamColour, boolean party) {
+    public static void handleRequest(String mapName, String teamColour, boolean party) {
         if (colourToUnicode == null) {
             colourToUnicode = new HashMap<>();
 
@@ -92,7 +60,7 @@ public class EggWarsMapInfo {
         }
     }
 
-    private ArrayList<String> MakeMapLayout(String mapName, String teamColour) {
+    private static ArrayList<String> MakeMapLayout(String mapName, String teamColour) {
         if (!NeedyFesa.mapInfo.get("teamColourOrder").getAsJsonObject().has(mapName)) {
             return null;
         }
@@ -110,7 +78,7 @@ public class EggWarsMapInfo {
         return null;
     }
 
-    private ArrayList<String> MakeMapLayoutCross(String teamColour, JsonObject mapInfo) {
+    private static ArrayList<String> MakeMapLayoutCross(String teamColour, JsonObject mapInfo) {
 
         JsonArray mapLayout = mapInfo.get("layout").getAsJsonArray();
         ArrayList<String> formattedMapLayout = new ArrayList<>();
@@ -135,9 +103,9 @@ public class EggWarsMapInfo {
                 spaceMaker(4 + teamFiller.length()) + colourToUnicode.get(teamColour) + teamFiller + "\n";
 
         partyMapLayoutString.append("@Left: ").append(colourToCubeColour.get(teamLeft)).append(teamLeft)
-                            .append("&r. Right: ").append(colourToCubeColour.get(teamRight)).append(teamRight)
-                            .append("&r. In Front: ").append(colourToCubeColour.get(teamBefore)).append(teamBefore)
-                            .append("&r.");
+                .append("&r. Right: ").append(colourToCubeColour.get(teamRight)).append(teamRight)
+                .append("&r. In Front: ").append(colourToCubeColour.get(teamBefore)).append(teamBefore)
+                .append("&r.");
 
         ArrayList<String> out = new ArrayList<>();
         out.add(mapLayoutString);
@@ -146,7 +114,7 @@ public class EggWarsMapInfo {
         return out;
     }
 
-    private ArrayList<String> MakeMapLayoutSquare(String teamColour, JsonObject mapInfo) {
+    private static ArrayList<String> MakeMapLayoutSquare(String teamColour, JsonObject mapInfo) {
 
         JsonArray mapLayout = mapInfo.get("layout").getAsJsonArray();
         int teamIndexSide = -1;
@@ -196,9 +164,9 @@ public class EggWarsMapInfo {
                 colourToUnicode.get(teamSide) + teamFiller + "\n";
 
         partyMapLayoutString.append("@Across: ").append(colourToCubeColour.get(teamAcross)).append(teamAcross)
-                            .append("&r. Side: ").append(colourToCubeColour.get(teamSide)).append(teamSide)
-                            .append("&r Side & Across: ").append(colourToCubeColour.get(teamSideAcross)).append(teamSideAcross)
-                            .append("&r.");
+                .append("&r. Side: ").append(colourToCubeColour.get(teamSide)).append(teamSide)
+                .append("&r Side & Across: ").append(colourToCubeColour.get(teamSideAcross)).append(teamSideAcross)
+                .append("&r.");
 
         ArrayList<String> out = new ArrayList<>();
         out.add(mapLayoutString);
