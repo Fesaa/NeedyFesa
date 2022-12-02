@@ -17,17 +17,27 @@ import java.io.*;
 
 public class NeedyFesa implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("needyfesa");
+
+	// Mod Vars
 	public static boolean partyStatus = false;
 	public static boolean logParty = false;
-	public static String eggWarsMap = "";
+
+	public static String gameMap = "";
 	public static String teamColour = "";
+	public static String game = "";
+
 	public static int chestPartyAnnounce = 0;
 	public static BlockPos currentChestCoords = null;
+
+	// Config Vars
 	public static JsonArray staticLobbyChestLocations;
 	public static JsonArray staticAutoMessages;
 	public static JsonArray staticReplaceMessages;
 	public static JsonObject mapInfo;
 	public static JsonObject needyFesaConfig;
+
+	// Keybinds
+	// TODO: save & make dependent on a json
 	private static final KeyBinding chestFinderKeyBind = KeyBindingHelper.registerKeyBinding(new KeyBinding("Chest Finder", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_7, "NeedyFesa"));
 	private static final KeyBinding autoVoteKeyBind  = KeyBindingHelper.registerKeyBinding(new KeyBinding("Auto Vote [EggWars]", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_8, "NeedyFesa"));
 	private static final KeyBinding mapInfoKeyBind  = KeyBindingHelper.registerKeyBinding(new KeyBinding("Map Info", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_9, "NeedyFesa"));
@@ -46,43 +56,54 @@ public class NeedyFesa implements ModInitializer {
 		File mapInfoJson = new File("./config/NeedyFesa/EggWarsMapInfo.json");
 		File needyFesaConfigJson = new File("./config/NeedyFesa/needyFesaConfig.json");
 
-
 		if (!staticLobbyChestLocationsJson.exists()) {
 			initChestLocations(staticLobbyChestLocationsJson.getPath());
 			LOGGER.warn("Config file, " + staticLobbyChestLocationsJson.getName() + ", was not present; I made one. Bug? Or first time using the NeedyFesa mod?");
 		}
-
 		if (!staticAutoMessagesJson.exists()) {
 			initAutoMessages(staticAutoMessagesJson.getPath());
 			LOGGER.warn("Config file, " + staticAutoMessagesJson.getName() + ", was not present; I made one. Bug? Or first time using the NeedyFesa mod?");
 		}
-
 		if (!staticReplaceMessagesJson.exists()) {
 			initReplaceMessagesJson(staticReplaceMessagesJson.getPath());
 			LOGGER.warn("Config file, " + staticReplaceMessagesJson.getName() + ", was not present; I made one. Bug? Or first time using the NeedyFesa mod?");
 		}
-
 		if (!mapInfoJson.exists()) {
 			initMapInfo(mapInfoJson.getPath());
 			LOGGER.warn("Config file, " + mapInfoJson.getName() + ", was not present; I made one. Bug? Or first time using the NeedyFesa mod?");
 		}
-
 		if (!needyFesaConfigJson.exists()) {
 			initNeedyFesaConfigJson(needyFesaConfigJson.getPath());
 			LOGGER.warn("Config file, " + needyFesaConfigJson.getName() + ", was not present; I made one. Bug? Or first time using the NeedyFesa mod?");
 		}
+
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (chestFinderKeyBind.wasPressed()) {
 				ChestFinder.chestRequest(10);
 			}
 			while (autoVoteKeyBind.wasPressed()) {
-				AutoVoteEggWars.run(NeedyFesa.needyFesaConfig.get("minWaitTime").getAsInt());
+				if (NeedyFesa.needyFesaConfig.has(NeedyFesa.game)) {
+					JsonObject voteInfo = NeedyFesa.needyFesaConfig.getAsJsonObject(NeedyFesa.game);
+
+					int leftVoteId = voteInfo.get("leftVoteId").getAsInt();
+					int middleVoteId = voteInfo.get("middleVoteId").getAsInt();
+					int rightVoteId = voteInfo.get("rightVoteId").getAsInt();
+					int leftChoiceId = voteInfo.get("leftChoiceId").getAsInt();
+					int middleChoiceId = voteInfo.get("middleChoiceId").getAsInt();
+					int rightChoiceId = voteInfo.get("rightChoiceId").getAsInt();
+					int hotBarSlot = voteInfo.get("hotBarSlot").getAsInt();
+
+					int minWaitTime = NeedyFesa.needyFesaConfig.get("minWaitTime").getAsInt();
+
+					AutoVote.vote(minWaitTime, leftVoteId, middleVoteId, rightVoteId, leftChoiceId, middleChoiceId, rightChoiceId, hotBarSlot);
+				}
 			}
 			while (mapInfoKeyBind.wasPressed()) {
-				EggWarsMapInfo.handleRequest(eggWarsMap, teamColour, false);
+				EggWarsMapInfo.handleRequest(gameMap, teamColour, false);
 			}
 		});
+
 		JsonReload();
 		LOGGER.info("NeedyFesa started successfully. \nHELLO CUTIES <3333");
 	}
@@ -92,16 +113,39 @@ public class NeedyFesa implements ModInitializer {
 		needyFesaConfigJson.addProperty("autoVote", true);
 		needyFesaConfigJson.addProperty("minWaitTime", 50);
 		needyFesaConfigJson.addProperty("maxWaitTime", 1000);
-		needyFesaConfigJson.addProperty("itemVote", 16);
-		needyFesaConfigJson.addProperty("healthVote", 10);
 
-		try {
-			FileWriter file = new FileWriter(pathname);
-			file.write(needyFesaConfigJson.toString());
-			file.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		JsonObject eggWarsVoting = new JsonObject();
+		eggWarsVoting.addProperty("leftVoteId", 16);
+		eggWarsVoting.addProperty("middleVoteId", -1);
+		eggWarsVoting.addProperty("rightVoteId", 10);
+		eggWarsVoting.addProperty("leftChoiceId", 11);
+		eggWarsVoting.addProperty("middleChoiceId", -1);
+		eggWarsVoting.addProperty("rightChoiceId", 15);
+		eggWarsVoting.addProperty("hotBarSlot", 2);
+
+		JsonObject soloSkyWarsVoting = new JsonObject();
+		soloSkyWarsVoting.addProperty("leftVoteId", 16);
+		soloSkyWarsVoting.addProperty("middleVoteId", 13);
+		soloSkyWarsVoting.addProperty("rightVoteId", 10);
+		soloSkyWarsVoting.addProperty("leftChoiceId", 10);
+		soloSkyWarsVoting.addProperty("middleChoiceId", 13);
+		soloSkyWarsVoting.addProperty("rightChoiceId", 16);
+		soloSkyWarsVoting.addProperty("hotBarSlot", 1);
+
+		JsonObject luckyIslandsVoting = new JsonObject();
+		luckyIslandsVoting.addProperty("leftVoteId", 14);
+		luckyIslandsVoting.addProperty("middleVoteId", -1);
+		luckyIslandsVoting.addProperty("rightVoteId", 10);
+		luckyIslandsVoting.addProperty("leftChoiceId", 11);
+		luckyIslandsVoting.addProperty("middleChoiceId", -1);
+		luckyIslandsVoting.addProperty("rightChoiceId", 15);
+		luckyIslandsVoting.addProperty("hotBarSlot", 1);
+
+		needyFesaConfigJson.add("Team EggWars", eggWarsVoting);
+		needyFesaConfigJson.add("Solo SkyWars", soloSkyWarsVoting);
+		needyFesaConfigJson.add("Lucky Islands", luckyIslandsVoting);
+
+		registerJson(pathname, needyFesaConfigJson);
 	}
 
 	private static void initReplaceMessagesJson(String pathname) {
@@ -112,28 +156,16 @@ public class NeedyFesa implements ModInitializer {
 		replaceMessageExample.addProperty("msg", "");
 
 		replaceMessagesJson.add(replaceMessageExample);
-		try {
-			FileWriter file = new FileWriter(pathname);
-			file.write(replaceMessagesJson.toString());
-			file.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+		registerJson(pathname, replaceMessagesJson);
 	}
 
 	private static void initMapInfo(String pathname) {
 		JsonObject mapInfo = new JsonObject();
-
 		mapInfo.add("teamColourOrder", new JsonObject());
 		mapInfo.add("teamBuildLimit", new JsonObject());
 
-		try {
-			FileWriter file = new FileWriter(pathname);
-			file.write(mapInfo.toString());
-			file.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		registerJson(pathname, mapInfo);
 	}
 
 	private static void initAutoMessages(String pathname) {
@@ -149,25 +181,32 @@ public class NeedyFesa implements ModInitializer {
 
 		autoMessagesJson.add(autoMessagesExample);
 
+		registerJson(pathname, autoMessagesJson);
+	}
+
+	private static void initChestLocations(String pathname){
+		JsonArray chestLocations = new JsonArray();
+		registerJson(pathname, chestLocations);
+	}
+
+	private static void registerJson(String pathname, JsonObject jsonObject) {
 		try {
 			FileWriter file = new FileWriter(pathname);
-			file.write(autoMessagesJson.toString());
+			file.write(jsonObject.toString());
 			file.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private static void initChestLocations(String pathname){
-		JsonArray chestLocations = new JsonArray();
+	private static void registerJson(String pathname, JsonArray jsonArray) {
 		try {
 			FileWriter file = new FileWriter(pathname);
-			file.write(chestLocations.toString());
+			file.write(jsonArray.toString());
 			file.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public static void JsonReload() {

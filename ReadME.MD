@@ -9,6 +9,7 @@ ___
 
 * AutoMessages
 * EggWars map layout
+* Auto Vote
 * Replace Messages
 * Chest finder
 * NameTag in Third Person

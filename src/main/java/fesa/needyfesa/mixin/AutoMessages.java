@@ -1,7 +1,7 @@
 package fesa.needyfesa.mixin;
 
 import com.google.gson.JsonObject;
-import fesa.needyfesa.AutoVoteEggWars;
+import fesa.needyfesa.AutoVote;
 import fesa.needyfesa.ChestFinder;
 import fesa.needyfesa.NeedyFesa;
 import net.minecraft.client.MinecraftClient;
@@ -82,21 +82,38 @@ public class AutoMessages {
 			NeedyFesa.partyStatus = true;
 		}
 
-		// EggWars Map Tracker & EggWars Auto Vote
+		// Game Tracker
 		if (currentScoreboard != null) {
-			if (currentScoreboard.getDisplayName().getString().contains("Team EggWars") && message.getString().matches(joinRegex)) {
+			if (message.getString().matches(joinRegex)) {
+				NeedyFesa.game = currentScoreboard.getDisplayName().getString();
+
+				// Update map
 				ScoreboardPlayerScore lastEntry = null;
 
 				for (ScoreboardPlayerScore scoreboardPlayerScore : currentScoreboard.getScoreboard().getAllPlayerScores(currentScoreboard)) {
 					if (scoreboardPlayerScore.getPlayerName().contains("Map:")) {
 						assert lastEntry != null;
-						NeedyFesa.eggWarsMap = lastEntry.getPlayerName().substring(2);
+						NeedyFesa.gameMap = lastEntry.getPlayerName().substring(2);
 						break;
 					}
 					lastEntry = scoreboardPlayerScore;
 				}
-				if (NeedyFesa.needyFesaConfig.get("autoVote").getAsBoolean()) {
-					AutoVoteEggWars.run(NeedyFesa.needyFesaConfig.get("minWaitTime").getAsInt());
+
+				// Auto Vote
+				if (NeedyFesa.needyFesaConfig.get("autoVote").getAsBoolean() && NeedyFesa.needyFesaConfig.has(NeedyFesa.game)) {
+					JsonObject voteInfo = NeedyFesa.needyFesaConfig.getAsJsonObject(NeedyFesa.game);
+
+					int leftVoteId = voteInfo.get("leftVoteId").getAsInt();
+					int middleVoteId = voteInfo.get("middleVoteId").getAsInt();
+					int rightVoteId = voteInfo.get("rightVoteId").getAsInt();
+					int leftChoiceId = voteInfo.get("leftChoiceId").getAsInt();
+					int middleChoiceId = voteInfo.get("middleChoiceId").getAsInt();
+					int rightChoiceId = voteInfo.get("rightChoiceId").getAsInt();
+					int hotBarSlot = voteInfo.get("hotBarSlot").getAsInt();
+
+					int minWaitTime = NeedyFesa.needyFesaConfig.get("minWaitTime").getAsInt();
+
+					AutoVote.vote(minWaitTime, leftVoteId, middleVoteId, rightVoteId, leftChoiceId, middleChoiceId, rightChoiceId, hotBarSlot);
 				}
 			}
 		}

@@ -37,7 +37,8 @@ public class CustomCommands {
             String s = "";
             s += "\nDebug info for Needyfesa";
             s += "\nlogParty: " + NeedyFesa.logParty;
-            s += "\neggWarsMap: " + NeedyFesa.eggWarsMap;
+            s += "\nGame: " + NeedyFesa.game;
+            s += "\ngameMap: " + NeedyFesa.gameMap;
             s += "\npartyStatus: " + NeedyFesa.partyStatus;
             s += "\nchestPartyAnnounce: " + NeedyFesa.chestPartyAnnounce;
             if (NeedyFesa.currentChestCoords != null) {

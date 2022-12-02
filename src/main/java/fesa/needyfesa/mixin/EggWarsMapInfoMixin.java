@@ -33,7 +33,7 @@ public class EggWarsMapInfoMixin {
                     Colour.append(" ");
                 }
                 NeedyFesa.teamColour = String.valueOf(Colour).stripTrailing();
-                EggWarsMapInfo.handleRequest(NeedyFesa.eggWarsMap, String.valueOf(Colour).stripTrailing(), NeedyFesa.partyStatus && NeedyFesa.logParty);;
+                EggWarsMapInfo.handleRequest(NeedyFesa.gameMap, String.valueOf(Colour).stripTrailing(), NeedyFesa.partyStatus && NeedyFesa.logParty);
             }
         }
         return title;
