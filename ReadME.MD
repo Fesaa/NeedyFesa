@@ -2,7 +2,7 @@
 ___
 My personal, horrible coded Fabric mod that does the very specific stuff I want it to do :D
 
-Might make a release once AutoVote for EggWars is working.
+You'll need the [Fabric-Api](https://www.curseforge.com/minecraft/mc-mods/fabric-api) to use the mod as well. Have fun with it (✿◠‿◠) 
 ___
 
 ### Current Features
