@@ -168,12 +168,25 @@ public class EggWarsMapInfo {
         StringBuilder partyMapLayoutString = new StringBuilder();
 
         if (teamIndexDepth == 1) {
-            String tempSide = teamColour;
-            String tempAcross = teamSideAcross;
-            teamColour = teamSide;
-            teamSide = tempSide;
-            teamSideAcross = teamAcross;
-            teamAcross = tempAcross;
+            if (teamIndexSide == 0) {
+                String tempSide = teamColour;
+                teamColour = teamSide;
+                teamSide = tempSide;
+            } else {
+                String tempAcross = teamSideAcross;
+                teamSideAcross = teamAcross;
+                teamAcross = tempAcross;
+            }
+        } else {
+            if (teamIndexSide == 0) {
+                String tempAcross = teamSideAcross;
+                teamSideAcross = teamAcross;
+                teamAcross = tempAcross;
+            } else {
+                String tempSide = teamColour;
+                teamColour = teamSide;
+                teamSide = tempSide;
+            }
         }
 
         String mapLayoutString = "\u00A7dMap layout:\n\n" +
