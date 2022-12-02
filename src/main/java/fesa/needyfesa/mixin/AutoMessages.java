@@ -23,6 +23,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 @Mixin(ChatHud.class)
 public class AutoMessages {
 
@@ -36,8 +39,7 @@ public class AutoMessages {
 
 		ScoreboardObjective currentScoreboard = world.getScoreboard().getObjectiveForSlot(1);
 
-		String joinRegex = "\\[\\+\\] .{0,3}" + p.getName().getString() + ".{0,3} joined your game \\(\\d*\\/\\d*\\)\\.";
-		String joinLobbyRegex = ".*" + p.getName().getString() + ".* has joined the lobby!";
+		String joinRegex = "\\[\\+\\] .{0,3}" + p.getName().getString() + ".{0,3} joined your game \\(\\d{1,3}\\/\\d{1,3}\\)\\.";
 
 		for (int i = 0; i < NeedyFesa.staticAutoMessages.size(); i++) {
 			JsonObject autoMessage = NeedyFesa.staticAutoMessages.get(i).getAsJsonObject();
@@ -64,12 +66,15 @@ public class AutoMessages {
 		}
 
 		// Chest Finder
-		if (message.getString().matches(joinLobbyRegex)) {
-			ChestFinder.chestRequest(10);
+		if (message.getString().contains("Friends, Parties, Extra help")) {
+			Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()).schedule(() -> {
+				ChestFinder.chestRequest(10);
+			}, 1000, TimeUnit.MILLISECONDS);
+
 		}
 
 		// Party Status tracker
-		if (message.getString().matches("You have joined .*'s party!")) {
+		if (message.getString().matches("You have joined [a-zA-Z0-9_]{2,16}'s party!")) {
 			NeedyFesa.partyStatus = true;
 		}
 		if (message.getString().matches("You have left your party!")
@@ -78,7 +83,7 @@ public class AutoMessages {
 			NeedyFesa.partyStatus = false;
 		}
 
-		if (message.getString().matches(".* joined the party!") && !NeedyFesa.partyStatus) {
+		if (message.getString().matches("[a-zA-Z0-9_]{2,16} joined the party!") && !NeedyFesa.partyStatus) {
 			NeedyFesa.partyStatus = true;
 		}
 
