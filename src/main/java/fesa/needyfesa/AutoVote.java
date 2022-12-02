@@ -1,5 +1,6 @@
 package fesa.needyfesa;
 
+import com.google.gson.JsonObject;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -22,24 +23,31 @@ public class AutoVote {
 
 
 
-    public static void vote(int minWaitTime, int leftVoteId, int middleVoteId, int rightVoteId, int leftChoiceId, int middleChoiceId, int rightChoiceId, int slot){
+    public static void vote(){
         assert MinecraftClient.getInstance().player != null;
         ClientPlayerEntity p = MinecraftClient.getInstance().player;
         ClientPlayerInteractionManager clientPlayerInteractionManager =  MinecraftClient.getInstance().interactionManager;
         assert clientPlayerInteractionManager != null;
 
+        JsonObject voteInfo = NeedyFesa.needyFesaConfig.getAsJsonObject(NeedyFesa.game);
+
         PlayerInventory inv =  p.getInventory();
-        inv.selectedSlot = slot;
+        inv.selectedSlot = voteInfo.get("hotBarSlot").getAsInt();;
         Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()).schedule(() -> {
             Hand[] hands = Hand.values();
             clientPlayerInteractionManager.interactItem(MinecraftClient.getInstance().player, hands[0]);
         }, 300, TimeUnit.MILLISECONDS);
-        leftVoteID = leftVoteId;
-        middleVoteID = middleVoteId;
-        rightVoteID = rightVoteId;
-        middleChoiceID = middleChoiceId;
-        rightChoiceID = rightChoiceId;
-        waitForChoiceMenu(clientPlayerInteractionManager, p, minWaitTime, NeedyFesa.needyFesaConfig.get("maxWaitTime").getAsInt(), leftChoiceId, "");
+
+        leftVoteID = voteInfo.get("leftVoteId").getAsInt();
+        middleVoteID = voteInfo.get("middleVoteId").getAsInt();
+        rightVoteID = voteInfo.get("rightVoteId").getAsInt();
+        middleChoiceID = voteInfo.get("middleChoiceId").getAsInt();
+        rightChoiceID = voteInfo.get("rightChoiceId").getAsInt();
+
+        waitForChoiceMenu(clientPlayerInteractionManager, p,
+                NeedyFesa.needyFesaConfig.get("minWaitTime").getAsInt(),
+                NeedyFesa.needyFesaConfig.get("maxWaitTime").getAsInt(),
+                voteInfo.get("leftChoiceId").getAsInt(), "");
     }
 
     private static void waitForChoiceMenu(ClientPlayerInteractionManager clientPlayerInteractionManager, ClientPlayerEntity player,

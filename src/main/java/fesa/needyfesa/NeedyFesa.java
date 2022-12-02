@@ -84,19 +84,7 @@ public class NeedyFesa implements ModInitializer {
 			}
 			while (autoVoteKeyBind.wasPressed()) {
 				if (NeedyFesa.needyFesaConfig.has(NeedyFesa.game)) {
-					JsonObject voteInfo = NeedyFesa.needyFesaConfig.getAsJsonObject(NeedyFesa.game);
-
-					int leftVoteId = voteInfo.get("leftVoteId").getAsInt();
-					int middleVoteId = voteInfo.get("middleVoteId").getAsInt();
-					int rightVoteId = voteInfo.get("rightVoteId").getAsInt();
-					int leftChoiceId = voteInfo.get("leftChoiceId").getAsInt();
-					int middleChoiceId = voteInfo.get("middleChoiceId").getAsInt();
-					int rightChoiceId = voteInfo.get("rightChoiceId").getAsInt();
-					int hotBarSlot = voteInfo.get("hotBarSlot").getAsInt();
-
-					int minWaitTime = NeedyFesa.needyFesaConfig.get("minWaitTime").getAsInt();
-
-					AutoVote.vote(minWaitTime, leftVoteId, middleVoteId, rightVoteId, leftChoiceId, middleChoiceId, rightChoiceId, hotBarSlot);
+					AutoVote.vote();
 				}
 			}
 			while (mapInfoKeyBind.wasPressed()) {
