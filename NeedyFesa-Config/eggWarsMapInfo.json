@@ -1,0 +1,108 @@
+{
+    "teamColourOrder": {
+        "Olympus": {
+            "style": "cross",
+            "layout": [
+                "Green",
+                "Dark Aqua",
+                "Yellow",
+                "Red"
+            ]
+        },
+        "Mushroom": {
+            "style": "square",
+            "layout": [
+                [
+                    "Yellow",
+                    "Aqua"
+                ],
+                [
+                    "Green",
+                    "Red"
+                ]
+            ]
+        },
+        "Graveyard": {
+            "style": "cross",
+            "layout": [
+                "Red",
+                "Green",
+                "Yellow",
+                "Dark Blue"
+            ]
+        },
+        "Palace": {
+            "style": "cross",
+            "layout": [
+                "Dark Purple",
+                "Yellow",
+                "Dark Blue",
+                "Red"
+            ]
+        },
+        "Ruins": {
+            "style": "cross",
+            "layout": [
+                "Dark Purple",
+                "Red",
+                "Green",
+                "Dark Blue"
+            ]
+        },
+        "Beach": {
+            "style": "cross",
+            "layout": [
+                "Dark Purple",
+                "Green",
+                "Gold",
+                "Aqua"
+            ]
+        },
+        "Modern": {
+            "style": "square",
+            "layout": [
+                [
+                    "Yellow",
+                    "Red"
+                ],
+                [
+                    "Aqua",
+                    "Light Purple"
+                ]
+            ]
+        },
+        "Cyber City": {
+            "style": "square",
+            "layout": [
+                [
+                    "Light Purple",
+                    "Dark Aqua"
+                ],
+                [
+                    "Red",
+                    "Green"
+                ]
+            ]
+        },
+        "Fairytale": {
+            "style": "cross",
+            "layout": [
+                "Dark Blue",
+                "Red",
+                "Dark Purple",
+                "Yellow"
+            ]
+        }
+    },
+    "teamBuildLimit": {
+        "Olympus": 71,
+        "Mushroom": 72,
+        "Graveyard": 56,
+        "Palace": 70,
+        "Ruins": 86,
+        "Beach": 86,
+        "Modern": 54,
+        "Cyber City": 67,
+        "Fairytale": 64
+    }
+}
