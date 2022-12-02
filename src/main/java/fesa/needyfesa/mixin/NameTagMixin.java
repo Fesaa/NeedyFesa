@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin({LivingEntityRenderer.class})
 public class NameTagMixin {
     @Inject(at = {@At("HEAD")}, method = {"Lnet/minecraft/client/render/entity/LivingEntityRenderer;hasLabel(Lnet/minecraft/entity/LivingEntity;)Z"}, cancellable = true)
-
     private void showName(LivingEntity entity, CallbackInfoReturnable<Boolean> booleanCallbackInfoReturnable) {
         if (entity == MinecraftClient.getInstance().cameraEntity) {
             booleanCallbackInfoReturnable.setReturnValue(MinecraftClient.isHudEnabled());

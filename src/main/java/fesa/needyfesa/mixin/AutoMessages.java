@@ -49,11 +49,11 @@ public class AutoMessages {
 
 			if (message.getString().matches(regexString)) {
 				if (autoMessage.get("command").getAsBoolean()) {
-					MinecraftClient.getInstance().player.sendCommand(msg);
+					p.sendCommand(msg);
 				}
 
 				if (autoMessage.get("chat").getAsBoolean()) {
-					MinecraftClient.getInstance().player.sendChatMessage(msg, Text.of(msg));
+					p.sendChatMessage(msg, Text.of(msg));
 				}
 
 				if (autoMessage.get("sound").getAsBoolean()) {
