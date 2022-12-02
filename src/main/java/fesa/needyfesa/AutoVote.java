@@ -68,11 +68,14 @@ public class AutoVote {
                     voteID = rightVoteID;
                     rightVoteID = -1;
                 }
-                clientPlayerInteractionManager.clickSlot(syncId, choiceId, 0, SlotActionType.PICKUP, player); // Choice
+
+                if (choiceId != -1) {
+                    clientPlayerInteractionManager.clickSlot(syncId, choiceId, 0, SlotActionType.PICKUP, player);
+                }
                 if (voteID != -1) {
                     waitForVote(clientPlayerInteractionManager, player, minWaitTime, maxWaitTime, voteID, MinecraftClient.getInstance().currentScreen.getTitle().getString());
                 } else {
-                    MinecraftClient.getInstance().currentScreen.close();
+                    clientPlayerInteractionManager.clickSlot(syncId, 22, 0, SlotActionType.PICKUP, player);
                 }
             }
         }, minWaitTime, TimeUnit.MILLISECONDS);
@@ -102,15 +105,9 @@ public class AutoVote {
                     rightChoiceID = -1;
                 }
                 clientPlayerInteractionManager.clickSlot(syncId, voteId, 0, SlotActionType.PICKUP, player); // Vote
+                clientPlayerInteractionManager.clickSlot(syncId, 22, 0, SlotActionType.PICKUP, player); // Back to ChoiceMenu
 
-                if (choiceID != -1) {
-                    clientPlayerInteractionManager.clickSlot(syncId, 22, 0, SlotActionType.PICKUP, player); // Back to ChoiceMenu
-                    waitForChoiceMenu(clientPlayerInteractionManager, player, minWaitTime, maxWaitTime, choiceID, MinecraftClient.getInstance().currentScreen.getTitle().getString());
-                } else {
-                    MinecraftClient.getInstance().currentScreen.close();
-                }
-
-
+                waitForChoiceMenu(clientPlayerInteractionManager, player, minWaitTime, maxWaitTime, choiceID, MinecraftClient.getInstance().currentScreen.getTitle().getString());
             }
         }, minWaitTime, TimeUnit.MILLISECONDS);
     }
