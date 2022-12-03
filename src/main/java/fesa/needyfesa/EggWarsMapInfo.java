@@ -27,6 +27,7 @@ public class EggWarsMapInfo {
             colourToUnicode.put("Aqua", "\u00A7b");
             colourToUnicode.put("Gold", "\u00A76");
             colourToUnicode.put("Light Purple", "\u00A7d");
+            colourToUnicode.put("Dark Gray", "\u00A70");
         }
         if (colourToCubeColour == null) {
             colourToCubeColour = new HashMap<>();
@@ -40,6 +41,7 @@ public class EggWarsMapInfo {
             colourToCubeColour.put("Aqua", "&b");
             colourToCubeColour.put("Gold", "&6");
             colourToCubeColour.put("Light Purple", "&d");
+            colourToCubeColour.put("Dark Gray", "&0");
         }
 
         ArrayList<String> req = MakeMapLayout(mapName, teamColour);
@@ -56,7 +58,9 @@ public class EggWarsMapInfo {
         if (party) {
             String partyMessage = req.get(1);
             assert MinecraftClient.getInstance().player != null;
-            MinecraftClient.getInstance().player.sendChatMessage(partyMessage, Text.of(partyMessage));
+            if (partyMessage != null) {
+                MinecraftClient.getInstance().player.sendChatMessage(partyMessage, Text.of(partyMessage));
+            }
         }
     }
 
@@ -75,7 +79,99 @@ public class EggWarsMapInfo {
             return MakeMapLayoutSquare(teamColour, MapInfo);
         }
 
+        if (MapInfo.get("style").getAsString().equals("double_triangle")) {
+            return MakeMapLayoutDoubleTriangle(teamColour, MapInfo);
+        }
+
         return null;
+    }
+
+    private static ArrayList<String> MakeMapLayoutDoubleTriangle(String teamColour, JsonObject mapInfo) {
+        JsonArray mapLayout = mapInfo.get("layout").getAsJsonArray();
+        ArrayList<String> formattedMapLayout = new ArrayList<>();
+
+        String mapLayoutString = "";
+
+        int teamTriangleLocation = -1;
+        int teamLeftRight = -1;
+
+        for (int triangleLocation = 0; triangleLocation < mapLayout.size(); triangleLocation++) {
+            for (int leftRight = 0; leftRight < mapLayout.get(triangleLocation).getAsJsonArray().size(); leftRight++) {
+                if (mapLayout.get(triangleLocation).getAsJsonArray().get(leftRight).getAsString().equals(teamColour)) {
+                    teamTriangleLocation = triangleLocation;
+                    teamLeftRight = leftRight;
+                    break;
+                }
+            }
+        }
+
+        String teamUnderLeft = "";
+        String teamUnderRight = "";
+        String teamLeftPoint = "";
+        String teamRightPoint = "";
+        String teamUpLeft = "";
+        String teamUpRight = "";
+
+        switch (teamTriangleLocation) {
+            case 0 -> {
+                teamUnderLeft = mapLayout.get(0).getAsJsonArray().get(0).getAsString();
+                teamUnderRight = mapLayout.get(0).getAsJsonArray().get(1).getAsString();
+                teamLeftPoint = mapLayout.get(1).getAsJsonArray().get(0).getAsString();
+                teamRightPoint = mapLayout.get(1).getAsJsonArray().get(1).getAsString();
+                teamUpLeft = mapLayout.get(2).getAsJsonArray().get(1).getAsString();
+                teamUpRight = mapLayout.get(2).getAsJsonArray().get(0).getAsString();
+            }
+            case 1 -> {
+                if (teamLeftRight == 0) {
+                    teamUnderLeft = mapLayout.get(0).getAsJsonArray().get(0).getAsString();
+                    teamUnderRight = mapLayout.get(0).getAsJsonArray().get(1).getAsString();
+                    teamLeftPoint = mapLayout.get(1).getAsJsonArray().get(0).getAsString();
+                    teamRightPoint = mapLayout.get(1).getAsJsonArray().get(1).getAsString();
+                    teamUpLeft = mapLayout.get(2).getAsJsonArray().get(1).getAsString();
+                    teamUpRight = mapLayout.get(2).getAsJsonArray().get(0).getAsString();
+                } else {
+                    teamUnderLeft = mapLayout.get(2).getAsJsonArray().get(0).getAsString();
+                    teamUnderRight = mapLayout.get(2).getAsJsonArray().get(1).getAsString();
+                    teamLeftPoint = mapLayout.get(1).getAsJsonArray().get(1).getAsString();
+                    teamRightPoint = mapLayout.get(1).getAsJsonArray().get(0).getAsString();
+                    teamUpLeft = mapLayout.get(0).getAsJsonArray().get(1).getAsString();
+                    teamUpRight = mapLayout.get(0).getAsJsonArray().get(0).getAsString();
+                }
+            }
+            case 2 -> {
+                teamUnderLeft = mapLayout.get(2).getAsJsonArray().get(0).getAsString();
+                teamUnderRight = mapLayout.get(2).getAsJsonArray().get(1).getAsString();
+                teamLeftPoint = mapLayout.get(1).getAsJsonArray().get(1).getAsString();
+                teamRightPoint = mapLayout.get(1).getAsJsonArray().get(0).getAsString();
+                teamUpLeft = mapLayout.get(0).getAsJsonArray().get(1).getAsString();
+                teamUpRight = mapLayout.get(0).getAsJsonArray().get(0).getAsString();
+            }
+        }
+
+        if (teamTriangleLocation != 1) {
+            mapLayoutString = "\u00A7dMap layout:\n\n" +
+                    spaceMaker(4 + teamFiller.length()) + colourToUnicode.get(teamUpLeft) + teamFiller +
+                    spaceMaker(6) + colourToUnicode.get(teamUpRight) + teamFiller + "\n" +
+                    spaceMaker(2) + colourToUnicode.get(teamLeftPoint) + teamFiller +
+                    spaceMaker(10 + 2 * teamFiller.length()) + colourToUnicode.get(teamRightPoint) + teamFiller + "\n" +
+                    spaceMaker(4 + teamFiller.length()) + colourToUnicode.get(teamUnderLeft) + teamFiller +
+                    spaceMaker(6) + colourToUnicode.get(teamUnderRight) + teamFiller + "\n";
+        } else {
+            mapLayoutString = "\u00A7dMap layout:\n\n" +
+                    spaceMaker(2 + teamFiller.length()) + colourToUnicode.get(teamRightPoint) + teamFiller + "\n" +
+                    spaceMaker(2) + colourToUnicode.get(teamUpRight) + teamFiller +
+                    spaceMaker(2 + teamFiller.length()) + colourToUnicode.get(teamUnderRight) + teamFiller + "\n\n" +
+                    spaceMaker(2) + colourToUnicode.get(teamUpLeft) + teamFiller +
+                    spaceMaker(2 + teamFiller.length()) + colourToUnicode.get(teamUnderLeft) + teamFiller + "\n" +
+                    spaceMaker(2 + teamFiller.length()) + colourToUnicode.get(teamLeftPoint) + teamFiller;
+        }
+
+
+        ArrayList<String> out = new ArrayList<>();
+        out.add(mapLayoutString);
+        out.add(null);
+
+        return out;
     }
 
     private static ArrayList<String> MakeMapLayoutCross(String teamColour, JsonObject mapInfo) {
