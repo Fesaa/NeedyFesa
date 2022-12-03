@@ -1,5 +1,14 @@
 {
     "teamColourOrder": {
+        "Yuki": {
+            "style": "cross",
+            "layout": [
+                "Green",
+                "Dark Blue",
+                "Yellow",
+                "Red"
+            ]
+        },
         "Olympus": {
             "style": "cross",
             "layout": [
