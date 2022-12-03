@@ -39,6 +39,7 @@ public class CustomCommands {
             s += "\nlogParty: " + NeedyFesa.logParty;
             s += "\nGame: " + NeedyFesa.game;
             s += "\ngameMap: " + NeedyFesa.gameMap;
+            s += "\nteamColour: " + NeedyFesa.teamColour;
             s += "\npartyStatus: " + NeedyFesa.partyStatus;
             s += "\nchestPartyAnnounce: " + NeedyFesa.chestPartyAnnounce;
             if (NeedyFesa.currentChestCoords != null) {
