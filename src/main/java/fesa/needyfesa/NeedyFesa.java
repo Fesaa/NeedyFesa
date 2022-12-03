@@ -30,7 +30,7 @@ public class NeedyFesa implements ModInitializer {
 	public static BlockPos currentChestCoords = null;
 
 	// Config Vars
-	public static JsonArray staticLobbyChestLocations;
+	public static JsonObject staticLobbyChestLocations;
 	public static JsonArray staticAutoMessages;
 	public static JsonArray staticReplaceMessages;
 	public static JsonObject mapInfo;
@@ -156,7 +156,8 @@ public class NeedyFesa implements ModInitializer {
 	}
 
 	private static void initChestLocations(String pathname){
-		JsonArray chestLocations = new JsonArray();
+		JsonObject chestLocations = new JsonObject();
+		chestLocations.addProperty("current-event", "");
 		registerJson(pathname, chestLocations);
 	}
 
@@ -182,7 +183,7 @@ public class NeedyFesa implements ModInitializer {
 
 	public static void JsonReload() {
 		try {
-			staticLobbyChestLocations = (new Gson()).fromJson(new FileReader("./config/NeedyFesa/staticLobbyChestLocations.json"), JsonArray.class);
+			staticLobbyChestLocations = (new Gson()).fromJson(new FileReader("./config/NeedyFesa/staticLobbyChestLocations.json"), JsonObject.class);
 		} catch (FileNotFoundException e) {
 			LOGGER.error("staticLobbyChestLocations.json was not found! Needyfesa might not work as expected.");
 			e.printStackTrace();
