@@ -1,11 +1,45 @@
 {
     "teamColourOrder": {
+        "City": {
+            "style": "double_triangle",
+            "layout": [
+                [
+                    "Light Purple",
+                    "Dark Gray"
+                ],
+                [
+                    "Green",
+                    "Red"
+                ],
+                [
+                    "Yellow",
+                    "Gold"
+                ]
+            ]
+        },
+        "Fireplace": {
+            "style": "double_triangle",
+            "layout": [
+                [
+                    "Green",
+                    "Dark Blue"
+                ],
+                [
+                    "Red",
+                    "Gold"
+                ],
+                [
+                    "Yellow",
+                    "Dark Purple"
+                ]
+            ]
+        },
         "Yuki": {
             "style": "cross",
             "layout": [
-                "Green",
-                "Dark Blue",
                 "Yellow",
+                "Dark Blue",
+                "Green",
                 "Red"
             ]
         },
@@ -112,6 +146,8 @@
         "Beach": 86,
         "Modern": 54,
         "Cyber City": 67,
-        "Fairytale": 64
+        "Fairytale": 64,
+        "City": 45,
+        "Yuki": 63
     }
 }
