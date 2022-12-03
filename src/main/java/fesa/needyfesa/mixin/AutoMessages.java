@@ -40,6 +40,7 @@ public class AutoMessages {
 		ScoreboardObjective currentScoreboard = world.getScoreboard().getObjectiveForSlot(1);
 
 		String joinRegex = "\\[\\+\\] .{0,3}" + p.getName().getString() + ".{0,3} joined your game \\(\\d{1,3}\\/\\d{1,3}\\)\\.";
+		String chestRegex = "A chest has been hidden somewhere in the Lobby with some goodies inside!";
 
 		for (int i = 0; i < NeedyFesa.staticAutoMessages.size(); i++) {
 			JsonObject autoMessage = NeedyFesa.staticAutoMessages.get(i).getAsJsonObject();
@@ -66,11 +67,8 @@ public class AutoMessages {
 		}
 
 		// Chest Finder
-		if (message.getString().contains("Friends, Parties, Extra help")) {
-			Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()).schedule(() -> {
-				ChestFinder.chestRequest(10);
-			}, 1000, TimeUnit.MILLISECONDS);
-
+		if (message.getString().matches(chestRegex)) {
+			ChestFinder.chestRequest(10);
 		}
 
 		// Party Status tracker
