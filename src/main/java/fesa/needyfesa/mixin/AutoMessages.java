@@ -68,7 +68,14 @@ public class AutoMessages {
 
 		// Chest Finder
 		if (message.getString().matches(chestRegex)) {
-			ChestFinder.chestRequest(10);
+			Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()).schedule(() -> {
+				if (currentScoreboard != null) {
+					if (currentScoreboard.getDisplayName().getString().equals("CubeCraft")) {
+						ChestFinder.chestRequest(10);
+					}
+				}
+			}, 1000, TimeUnit.MILLISECONDS);
+
 		}
 
 		// Party Status tracker
