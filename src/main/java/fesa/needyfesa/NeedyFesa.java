@@ -36,11 +36,6 @@ public class NeedyFesa implements ModInitializer {
 	public static JsonObject mapInfo;
 	public static JsonObject needyFesaConfig;
 
-	// Keybinds
-	// TODO: save & make dependent on a json
-	private static final KeyBinding chestFinderKeyBind = KeyBindingHelper.registerKeyBinding(new KeyBinding("Chest Finder", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_7, "NeedyFesa"));
-	private static final KeyBinding autoVoteKeyBind  = KeyBindingHelper.registerKeyBinding(new KeyBinding("Auto Vote [EggWars]", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_8, "NeedyFesa"));
-	private static final KeyBinding mapInfoKeyBind  = KeyBindingHelper.registerKeyBinding(new KeyBinding("Map Info", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_KP_9, "NeedyFesa"));
 	@Override
 	public void onInitialize() {
 
@@ -77,20 +72,8 @@ public class NeedyFesa implements ModInitializer {
 			LOGGER.warn("Config file, " + needyFesaConfigJson.getName() + ", was not present; I made one. Bug? Or first time using the NeedyFesa mod?");
 		}
 
-
-		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			while (chestFinderKeyBind.wasPressed()) {
-				ChestFinder.chestRequest(10);
-			}
-			while (autoVoteKeyBind.wasPressed()) {
-				if (NeedyFesa.needyFesaConfig.has(NeedyFesa.game)) {
-					AutoVote.vote();
-				}
-			}
-			while (mapInfoKeyBind.wasPressed()) {
-				EggWarsMapInfo.handleRequest(gameMap, teamColour, false);
-			}
-		});
+		KeyBindManager.loadKeyBinds();
+		KeyBindManager.registerEvents();
 
 		JsonReload();
 		LOGGER.info("NeedyFesa started successfully. \nHELLO CUTIES <3333");
