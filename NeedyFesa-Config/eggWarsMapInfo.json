@@ -1,5 +1,26 @@
 {
     "teamColourOrder": {
+        "Cyber Snow": {
+            "style": "double_cross",
+            "layout": [
+                [
+                    "Dark Blue",
+                    "Red"
+                ],
+                [
+                    "Gray",
+                    "Light Purple"
+                ],
+                [
+                    "Dark Gray",
+                    "Dark Aqua"
+                ],
+                [
+                    "Yellow",
+                    "Green"
+                ]
+            ]
+        },
         "City": {
             "style": "double_triangle",
             "layout": [
@@ -148,6 +169,7 @@
         "Cyber City": 67,
         "Fairytale": 64,
         "City": 45,
-        "Yuki": 63
+        "Yuki": 63,
+        "Cyber Snow": 77
     }
 }
