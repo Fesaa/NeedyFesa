@@ -4,12 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.math.BlockPos;
-import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,6 +69,8 @@ public class NeedyFesa implements ModInitializer {
 
 		KeyBindManager.loadKeyBinds();
 		KeyBindManager.registerEvents();
+
+		ClientCommandManager.registerCommands();
 
 		JsonReload();
 		LOGGER.info("NeedyFesa started successfully. \nHELLO CUTIES <3333");
