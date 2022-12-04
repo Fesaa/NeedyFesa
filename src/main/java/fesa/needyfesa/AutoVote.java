@@ -29,7 +29,7 @@ public class AutoVote {
         ClientPlayerInteractionManager clientPlayerInteractionManager =  MinecraftClient.getInstance().interactionManager;
         assert clientPlayerInteractionManager != null;
 
-        JsonObject voteInfo = NeedyFesa.needyFesaConfig.getAsJsonObject(NeedyFesa.game);
+        JsonObject voteInfo = NeedyFesa.configManager.needyFesaConfig.get(NeedyFesa.game).getAsJsonObject();
 
         PlayerInventory inv =  p.getInventory();
         inv.selectedSlot = voteInfo.get("hotBarSlot").getAsInt();;
@@ -45,8 +45,8 @@ public class AutoVote {
         rightChoiceID = voteInfo.get("rightChoiceId").getAsInt();
 
         waitForChoiceMenu(clientPlayerInteractionManager, p,
-                NeedyFesa.needyFesaConfig.get("minWaitTime").getAsInt(),
-                NeedyFesa.needyFesaConfig.get("maxWaitTime").getAsInt(),
+                NeedyFesa.configManager.needyFesaConfig.get("minWaitTime").getAsInt(),
+                NeedyFesa.configManager.needyFesaConfig.get("maxWaitTime").getAsInt(),
                 voteInfo.get("leftChoiceId").getAsInt(), "");
     }
 

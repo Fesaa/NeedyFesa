@@ -17,8 +17,8 @@ public class ReplaceMessages {
     @Inject(at = @At("HEAD"), method = "sendMessage", cancellable = true)
     public void sendMessage(String msg, boolean addToHistory, CallbackInfoReturnable callbackInfoReturnable) {
         String originalMessage = msg;
-        for (int i = 0; i < NeedyFesa.staticReplaceMessages.size(); i++) {
-            JsonObject replaceMessage = NeedyFesa.staticReplaceMessages.get(i).getAsJsonObject();
+        for (int i = 0; i < NeedyFesa.configManager.staticReplaceMessages.size(); i++) {
+            JsonObject replaceMessage = NeedyFesa.configManager.staticReplaceMessages.get(i).getAsJsonObject();
             if (msg.contains(replaceMessage.get("text").getAsString())) {
                 msg = msg.replace(replaceMessage.get("text").getAsString(), replaceMessage.get("msg").getAsString());
             }

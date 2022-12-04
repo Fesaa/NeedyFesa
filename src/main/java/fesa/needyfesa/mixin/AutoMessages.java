@@ -42,8 +42,8 @@ public class AutoMessages {
 		String joinRegex = "\\[\\+\\] .{0,3}" + p.getName().getString() + ".{0,3} joined your game \\(\\d{1,3}\\/\\d{1,3}\\)\\.";
 		String chestRegex = "A chest has been hidden somewhere in the Lobby with some goodies inside!";
 
-		for (int i = 0; i < NeedyFesa.staticAutoMessages.size(); i++) {
-			JsonObject autoMessage = NeedyFesa.staticAutoMessages.get(i).getAsJsonObject();
+		for (int i = 0; i < NeedyFesa.configManager.staticAutoMessages.size(); i++) {
+			JsonObject autoMessage = NeedyFesa.configManager.staticAutoMessages.get(i).getAsJsonObject();
 			String regexString = autoMessage.get("regex").getAsString();
 
 			regexString = regexString.replace("&player", p.getName().getString());
@@ -110,7 +110,7 @@ public class AutoMessages {
 				}
 
 				// Auto Vote
-				if (NeedyFesa.needyFesaConfig.get("autoVote").getAsBoolean() && NeedyFesa.needyFesaConfig.has(NeedyFesa.game)) {
+				if (NeedyFesa.configManager.needyFesaConfig.get("autoVote").getAsBoolean() && NeedyFesa.configManager.needyFesaConfig.has(NeedyFesa.game)) {
 					AutoVote.vote();
 				}
 			}

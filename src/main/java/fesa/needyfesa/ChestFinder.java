@@ -20,7 +20,7 @@ import java.util.Map;
 public class ChestFinder {
     public static void chestRequest(int range) {
         assert MinecraftClient.getInstance().player != null;
-        ArrayList<BlockPos> chests = getChests(NeedyFesa.staticLobbyChestLocations.get(NeedyFesa.staticLobbyChestLocations.get("current-event").getAsString()).getAsJsonArray(), range);
+        ArrayList<BlockPos> chests = getChests(NeedyFesa.configManager.staticLobbyChestLocations.get(NeedyFesa.configManager.staticLobbyChestLocations.get("current-event").getAsString()).getAsJsonArray(), range);
         if (chests.isEmpty()) {
             MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("\u00A73No chests have been found :("));
         } else {

@@ -58,7 +58,7 @@ public class ClientCommandManager {
     }
 
     private static int reloadFunc() {
-        NeedyFesa.JsonReload();
+        NeedyFesa.configManager.loadConfig();
         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("\u00A7bReloaded all json files. Can't confirm if any of them were successful." + NeedyFesa.partyStatus));
         return Command.SINGLE_SUCCESS;
     }

@@ -64,8 +64,8 @@ public class EggWarsMapInfo {
         }
 
         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(req.get(0)));
-        if (NeedyFesa.mapInfo.get("teamBuildLimit").getAsJsonObject().has(mapName)) {
-            String buildLimitString = "\u00A76The build limit is: " + NeedyFesa.mapInfo.get("teamBuildLimit").getAsJsonObject().get(mapName);
+        if (NeedyFesa.configManager.mapInfo.get("teamBuildLimit").getAsJsonObject().has(mapName)) {
+            String buildLimitString = "\u00A76The build limit is: " + NeedyFesa.configManager.mapInfo.get("teamBuildLimit").getAsJsonObject().get(mapName);
             MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(buildLimitString));
         }
 
@@ -79,11 +79,11 @@ public class EggWarsMapInfo {
     }
 
     private static ArrayList<String> MakeMapLayout(String mapName, String teamColour) {
-        if (!NeedyFesa.mapInfo.get("teamColourOrder").getAsJsonObject().has(mapName)) {
+        if (!NeedyFesa.configManager.mapInfo.get("teamColourOrder").getAsJsonObject().has(mapName)) {
             return null;
         }
 
-        JsonObject MapInfo = NeedyFesa.mapInfo.get("teamColourOrder").getAsJsonObject().get(mapName).getAsJsonObject();
+        JsonObject MapInfo = NeedyFesa.configManager.mapInfo.get("teamColourOrder").getAsJsonObject().get(mapName).getAsJsonObject();
 
         if (MapInfo.get("style").getAsString().equals("cross")) {
             return MakeMapLayoutCross(teamColour, MapInfo);
