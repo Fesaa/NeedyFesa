@@ -32,7 +32,7 @@ public class AutoVote {
         JsonObject voteInfo = NeedyFesa.configManager.needyFesaConfig.get(NeedyFesa.game).getAsJsonObject();
 
         PlayerInventory inv =  p.getInventory();
-        inv.selectedSlot = voteInfo.get("hotBarSlot").getAsInt();;
+        inv.selectedSlot = voteInfo.get("hotBarSlot").getAsInt();
         Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()).schedule(() -> {
             Hand[] hands = Hand.values();
             clientPlayerInteractionManager.interactItem(MinecraftClient.getInstance().player, hands[0]);
@@ -53,7 +53,7 @@ public class AutoVote {
     private static void waitForChoiceMenu(ClientPlayerInteractionManager clientPlayerInteractionManager, ClientPlayerEntity player,
                                           int minWaitTime, int maxWaitTime, int choiceId, String currentTitle) {
         if (maxWaitTime == 0) {
-            abortedAutoVote("\u00A7b Aborted after " + maxWaitTime + " while waiting for a choice");
+            abortedAutoVote("\u00A7b Aborted after " + NeedyFesa.configManager.needyFesaConfig.get("maxWaitTime").getAsInt() + " while waiting for a choice");
             return;
         }
         Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()).schedule(() -> {
@@ -92,7 +92,7 @@ public class AutoVote {
     private static void waitForVote(ClientPlayerInteractionManager clientPlayerInteractionManager, ClientPlayerEntity player,
                                     int minWaitTime, int maxWaitTime, int voteId, String currentTitle) {
         if (maxWaitTime == 0) {
-            abortedAutoVote("\u00A7b Aborted after" + maxWaitTime + "ms while waiting for to vote");
+            abortedAutoVote("\u00A7b Aborted after" + NeedyFesa.configManager.needyFesaConfig.get("maxWaitTime").getAsInt() + "ms while waiting for to vote");
             return;
         }
         Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()).schedule(() -> {
