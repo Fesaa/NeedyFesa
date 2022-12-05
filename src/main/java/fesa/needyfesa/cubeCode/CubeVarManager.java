@@ -18,13 +18,13 @@ public class CubeVarManager {
     public static String debugString() {
         StringBuilder s = new StringBuilder();
         s.append("\nDebug info for Needyfesa");
-        for (Field field : CubeVarManager.class.getFields()) {
-            try {
-                s.append("\n").append(field.getName()).append(": ").append(field.get(CubeVarManager.class).toString());
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
+        s.append("\nMap: ").append(map);
+        s.append("\nteamColour: ").append(teamColour);
+        s.append("\nname: ").append(name);
+        s.append("\nserverIP: ").append(serverIP);
+        s.append("\npartyStatus: ").append(partyStatus);
+        s.append("\nlogParty: ").append(logParty);
+        s.append("\nchestPartyAnnounce: ").append(chestPartyAnnounce);
         s.append("\n");
         return s.toString();
     }
