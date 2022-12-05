@@ -169,17 +169,17 @@ public class EggWarsMapInfo {
             }
         }
 
-        String teamUnderLeft;
-        String teamUnderRight;
+        String teamUnderLeft = "";
+        String teamUnderRight = "";
         String teamLeftPoint = "";
         String teamRightPoint = "";
         String teamUpLeft = "";
         String teamUpRight = "";
 
-        teamUnderLeft = mapLayout.get(0).getAsJsonArray().get(0).getAsString();
-        teamUnderRight = mapLayout.get(0).getAsJsonArray().get(1).getAsString();
         switch (teamTriangleLocation) {
             case 0 -> {
+                teamUnderLeft = mapLayout.get(0).getAsJsonArray().get(0).getAsString();
+                teamUnderRight = mapLayout.get(0).getAsJsonArray().get(1).getAsString();
                 teamLeftPoint = mapLayout.get(1).getAsJsonArray().get(0).getAsString();
                 teamRightPoint = mapLayout.get(1).getAsJsonArray().get(1).getAsString();
                 teamUpLeft = mapLayout.get(2).getAsJsonArray().get(1).getAsString();
@@ -187,11 +187,15 @@ public class EggWarsMapInfo {
             }
             case 1 -> {
                 if (teamLeftRight == 0) {
+                    teamUnderLeft = mapLayout.get(0).getAsJsonArray().get(0).getAsString();
+                    teamUnderRight = mapLayout.get(0).getAsJsonArray().get(1).getAsString();
                     teamLeftPoint = mapLayout.get(1).getAsJsonArray().get(0).getAsString();
                     teamRightPoint = mapLayout.get(1).getAsJsonArray().get(1).getAsString();
                     teamUpLeft = mapLayout.get(2).getAsJsonArray().get(1).getAsString();
                     teamUpRight = mapLayout.get(2).getAsJsonArray().get(0).getAsString();
                 } else {
+                    teamUnderLeft = mapLayout.get(2).getAsJsonArray().get(0).getAsString();
+                    teamUnderRight = mapLayout.get(2).getAsJsonArray().get(1).getAsString();
                     teamLeftPoint = mapLayout.get(1).getAsJsonArray().get(1).getAsString();
                     teamRightPoint = mapLayout.get(1).getAsJsonArray().get(0).getAsString();
                     teamUpLeft = mapLayout.get(0).getAsJsonArray().get(1).getAsString();
@@ -199,6 +203,8 @@ public class EggWarsMapInfo {
                 }
             }
             case 2 -> {
+                teamUnderLeft = mapLayout.get(2).getAsJsonArray().get(0).getAsString();
+                teamUnderRight = mapLayout.get(2).getAsJsonArray().get(1).getAsString();
                 teamLeftPoint = mapLayout.get(1).getAsJsonArray().get(1).getAsString();
                 teamRightPoint = mapLayout.get(1).getAsJsonArray().get(0).getAsString();
                 teamUpLeft = mapLayout.get(0).getAsJsonArray().get(1).getAsString();
