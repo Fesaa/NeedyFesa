@@ -88,13 +88,6 @@ public class AddMessageMixin {
 		if (message.getString().matches("[a-zA-Z0-9_]{2,16} joined the party!") && !CubeVarManager.partyStatus) {
 			CubeVarManager.partyStatus = true;
 		}
-
-		// Auto Vote
-		if (message.getString().matches(joinRegex)
-				&& NeedyFesa.configManager.needyFesaConfig.get("autoVote").getAsBoolean()
-				&& NeedyFesa.configManager.needyFesaConfig.has(CubeVarManager.name)) {
-			AutoVote.vote();
-		}
 	}
 
 	private void playSound(String s) {

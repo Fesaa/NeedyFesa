@@ -38,7 +38,7 @@ public class ClientCommandManager {
                             .executes(ctx -> reloadFunc()))
             );
 
-            for (Field field: NeedyFesa.class.getFields()) {
+            for (Field field: CubeVarManager.class.getFields()) {
                 if (!(field.getName().equals("LOGGER") || field.getName().equals("configManager"))) {
                     if (field.getType().equals(String.class)) {
                         dispatcher.register(literal("NeedyFesa")
@@ -64,7 +64,7 @@ public class ClientCommandManager {
 
     private static int changeIntField(Field field, CommandContext<FabricClientCommandSource> ctx) {
         try {
-            Object v = field.get(NeedyFesa.class);
+            Object v = field.get(CubeVarManager.class);
             field.set(v, getInteger(ctx, "value"));
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -75,7 +75,7 @@ public class ClientCommandManager {
 
     private static int changeStringField(Field field, CommandContext<FabricClientCommandSource> ctx) {
         try {
-            Object v = field.get(NeedyFesa.class);
+            Object v = field.get(CubeVarManager.class);
             field.set(v, getString(ctx, "value"));
         } catch (IllegalAccessException e) {
             e.printStackTrace();
