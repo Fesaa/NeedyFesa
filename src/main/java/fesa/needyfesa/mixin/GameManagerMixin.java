@@ -1,6 +1,6 @@
 package fesa.needyfesa.mixin;
 
-import fesa.needyfesa.cubeCode.GameManager;
+import fesa.needyfesa.cubeCode.CubeVarManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
@@ -59,13 +59,13 @@ public class GameManagerMixin {
 
         if (connection.getAddress().toString().contains("play.cubecraft.net")
                 || connection.getAddress().toString().contains("ccgn.co")) {
-            GameManager.map = map;
-            GameManager.name = currentScoreboard.getDisplayName().getString();
-            GameManager.teamColour = String.valueOf(Colour).stripTrailing();
-            GameManager.serverIP = "cubecraft";
+            CubeVarManager.map = map;
+            CubeVarManager.name = currentScoreboard.getDisplayName().getString();
+            CubeVarManager.teamColour = String.valueOf(Colour).stripTrailing();
+            CubeVarManager.serverIP = "cubecraft";
         } else {
-            GameManager.serverIP = connection.getAddress().toString();
-            GameManager.partyStatus = false;
+            CubeVarManager.serverIP = connection.getAddress().toString();
+            CubeVarManager.partyStatus = false;
         }
     }
 }

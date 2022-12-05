@@ -1,7 +1,7 @@
 package fesa.needyfesa.mixin;
 
 import fesa.needyfesa.cubeCode.EggWarsMapInfo;
-import fesa.needyfesa.cubeCode.GameManager;
+import fesa.needyfesa.cubeCode.CubeVarManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
@@ -21,7 +21,7 @@ public class EggWarsMapInfoMixin {
         ScoreboardObjective currentScoreboard = world.getScoreboard().getObjectiveForSlot(1);
         if (currentScoreboard != null) {
             if (currentScoreboard.getDisplayName().getString().contains("Team EggWars") && title.toString().contains("8")) {
-                EggWarsMapInfo.handleRequest(GameManager.name, GameManager.teamColour, GameManager.partyStatus && GameManager.logParty);
+                EggWarsMapInfo.handleRequest(CubeVarManager.name, CubeVarManager.teamColour, CubeVarManager.partyStatus && CubeVarManager.logParty);
             }
         }
         return title;

@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import fesa.needyfesa.NeedyFesa;
-import fesa.needyfesa.cubeCode.GameManager;
+import fesa.needyfesa.cubeCode.CubeVarManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
@@ -85,25 +85,25 @@ public class ClientCommandManager {
     }
 
     private static int debugFeedback() {
-        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(GameManager.debugString()));
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(CubeVarManager.debugString()));
         return Command.SINGLE_SUCCESS;
     }
 
     private static int switchPartyStatus() {
-        GameManager.partyStatus = !GameManager.partyStatus;
-        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§bUpdated partyStatus to " + GameManager.partyStatus + "."));
+        CubeVarManager.partyStatus = !CubeVarManager.partyStatus;
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§bUpdated partyStatus to " + CubeVarManager.partyStatus + "."));
         return Command.SINGLE_SUCCESS;
     }
 
     private static int switchLogParty() {
-        GameManager.logParty = !GameManager.logParty;
-        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§bUpdated logParty to " + GameManager.logParty + "."));
+        CubeVarManager.logParty = !CubeVarManager.logParty;
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§bUpdated logParty to " + CubeVarManager.logParty + "."));
         return Command.SINGLE_SUCCESS;
     }
 
     private static int reloadFunc() {
         NeedyFesa.configManager.loadConfig();
-        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§bReloaded all json files. Can't confirm if any of them were successful." + GameManager.partyStatus));
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§bReloaded all json files. Can't confirm if any of them were successful." + CubeVarManager.partyStatus));
         return Command.SINGLE_SUCCESS;
     }
 

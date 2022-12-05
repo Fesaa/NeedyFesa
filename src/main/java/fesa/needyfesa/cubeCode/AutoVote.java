@@ -30,7 +30,7 @@ public class AutoVote {
         ClientPlayerInteractionManager clientPlayerInteractionManager =  MinecraftClient.getInstance().interactionManager;
         assert clientPlayerInteractionManager != null;
 
-        JsonObject voteInfo = NeedyFesa.configManager.needyFesaConfig.get(GameManager.name).getAsJsonObject();
+        JsonObject voteInfo = NeedyFesa.configManager.needyFesaConfig.get(CubeVarManager.name).getAsJsonObject();
 
         PlayerInventory inv =  p.getInventory();
         inv.selectedSlot = voteInfo.get("hotBarSlot").getAsInt();

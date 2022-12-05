@@ -3,7 +3,7 @@ package fesa.needyfesa.cubeCode;
 import net.minecraft.util.math.BlockPos;
 import java.lang.reflect.Field;
 
-public class GameManager {
+public class CubeVarManager {
     public static String map = "";
     public static String teamColour = "";
     public static String name = "";
@@ -18,9 +18,9 @@ public class GameManager {
     public static String debugString() {
         StringBuilder s = new StringBuilder();
         s.append("\nDebug info for Needyfesa");
-        for (Field field : GameManager.class.getFields()) {
+        for (Field field : CubeVarManager.class.getFields()) {
             try {
-                s.append("\n").append(field.getName()).append(": ").append(field.get(GameManager.class).toString());
+                s.append("\n").append(field.getName()).append(": ").append(field.get(CubeVarManager.class).toString());
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }

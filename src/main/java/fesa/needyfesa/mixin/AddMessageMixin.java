@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import fesa.needyfesa.cubeCode.AutoVote;
 import fesa.needyfesa.cubeCode.ChestFinder;
 import fesa.needyfesa.NeedyFesa;
-import fesa.needyfesa.cubeCode.GameManager;
+import fesa.needyfesa.cubeCode.CubeVarManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.MessageIndicator;
@@ -55,7 +55,7 @@ public class AddMessageMixin {
 
 				if (autoMessage.has("partyMessage")
 						&& autoMessage.get("partyMessage").getAsBoolean()
-						&& GameManager.partyStatus) {
+						&& CubeVarManager.partyStatus) {
 					p.sendChatMessage("@" + msg, Text.of("@" + msg));
 				}
 
@@ -68,7 +68,7 @@ public class AddMessageMixin {
 		// Chest Finder
 		if (message.getString().matches(chestRegex)) {
 			Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()).schedule(() -> {
-				if (GameManager.name.equals("CubeCraft")) {
+				if (CubeVarManager.name.equals("CubeCraft")) {
 					ChestFinder.chestRequest(10);
 				}
 			}, 1000, TimeUnit.MILLISECONDS);
@@ -77,22 +77,22 @@ public class AddMessageMixin {
 
 		// Party Status tracker
 		if (message.getString().matches("You have joined [a-zA-Z0-9_]{2,16}'s party!")) {
-			GameManager.partyStatus = true;
+			CubeVarManager.partyStatus = true;
 		}
 		if (message.getString().matches("You have left your party!")
 			|| message.getString().matches("You were kicked from your party!")
 			|| message.getString().matches("The party has been disbanded!")) {
-			GameManager.partyStatus = false;
+			CubeVarManager.partyStatus = false;
 		}
 
-		if (message.getString().matches("[a-zA-Z0-9_]{2,16} joined the party!") && !GameManager.partyStatus) {
-			GameManager.partyStatus = true;
+		if (message.getString().matches("[a-zA-Z0-9_]{2,16} joined the party!") && !CubeVarManager.partyStatus) {
+			CubeVarManager.partyStatus = true;
 		}
 
 		// Auto Vote
 		if (message.getString().matches(joinRegex)
 				&& NeedyFesa.configManager.needyFesaConfig.get("autoVote").getAsBoolean()
-				&& NeedyFesa.configManager.needyFesaConfig.has(GameManager.name)) {
+				&& NeedyFesa.configManager.needyFesaConfig.has(CubeVarManager.name)) {
 			AutoVote.vote();
 		}
 	}
