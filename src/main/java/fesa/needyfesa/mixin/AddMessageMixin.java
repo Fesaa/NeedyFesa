@@ -1,17 +1,15 @@
 package fesa.needyfesa.mixin;
 
 import com.google.gson.JsonObject;
-import fesa.needyfesa.AutoVote;
-import fesa.needyfesa.ChestFinder;
+import fesa.needyfesa.cubeCode.AutoVote;
+import fesa.needyfesa.cubeCode.ChestFinder;
 import fesa.needyfesa.NeedyFesa;
+import fesa.needyfesa.cubeCode.GameManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.MessageIndicator;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.message.MessageSignatureData;
-import net.minecraft.scoreboard.ScoreboardObjective;
-import net.minecraft.scoreboard.ScoreboardPlayerScore;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
@@ -27,17 +25,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Mixin(ChatHud.class)
-public class AutoMessages {
+public class AddMessageMixin {
 
 	@Inject(at = @At("HEAD"), method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V")
 	private void addMessage(Text message, @Nullable MessageSignatureData signature, int ticks, @Nullable MessageIndicator indicator, boolean refresh, CallbackInfo info) {
 		assert MinecraftClient.getInstance().player != null;
-		assert MinecraftClient.getInstance().world != null;
 		ClientPlayerEntity p = MinecraftClient.getInstance().player;
-		ClientWorld world = MinecraftClient.getInstance().world;
-
-
-		ScoreboardObjective currentScoreboard = world.getScoreboard().getObjectiveForSlot(1);
 
 		String joinRegex = "\\[\\+\\] .{0,3}" + p.getName().getString() + ".{0,3} joined your game \\(\\d{1,3}\\/\\d{1,3}\\)\\.";
 		String chestRegex = "A chest has been hidden somewhere in the Lobby with some goodies inside!";
@@ -60,6 +53,12 @@ public class AutoMessages {
 					p.sendChatMessage(msg, Text.of(msg));
 				}
 
+				if (autoMessage.has("partyMessage")
+						&& autoMessage.get("partyMessage").getAsBoolean()
+						&& GameManager.partyStatus) {
+					p.sendChatMessage("@" + msg, Text.of("@" + msg));
+				}
+
 				if (autoMessage.get("sound").getAsBoolean()) {
 					this.playSound(autoMessage.get("sound_id").getAsString());
 				}
@@ -69,10 +68,8 @@ public class AutoMessages {
 		// Chest Finder
 		if (message.getString().matches(chestRegex)) {
 			Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()).schedule(() -> {
-				if (currentScoreboard != null) {
-					if (currentScoreboard.getDisplayName().getString().equals("CubeCraft")) {
-						ChestFinder.chestRequest(10);
-					}
+				if (GameManager.name.equals("CubeCraft")) {
+					ChestFinder.chestRequest(10);
 				}
 			}, 1000, TimeUnit.MILLISECONDS);
 
@@ -80,40 +77,23 @@ public class AutoMessages {
 
 		// Party Status tracker
 		if (message.getString().matches("You have joined [a-zA-Z0-9_]{2,16}'s party!")) {
-			NeedyFesa.partyStatus = true;
+			GameManager.partyStatus = true;
 		}
 		if (message.getString().matches("You have left your party!")
 			|| message.getString().matches("You were kicked from your party!")
 			|| message.getString().matches("The party has been disbanded!")) {
-			NeedyFesa.partyStatus = false;
+			GameManager.partyStatus = false;
 		}
 
-		if (message.getString().matches("[a-zA-Z0-9_]{2,16} joined the party!") && !NeedyFesa.partyStatus) {
-			NeedyFesa.partyStatus = true;
+		if (message.getString().matches("[a-zA-Z0-9_]{2,16} joined the party!") && !GameManager.partyStatus) {
+			GameManager.partyStatus = true;
 		}
 
-		// Game Tracker
-		if (currentScoreboard != null) {
-			if (message.getString().matches(joinRegex)) {
-				NeedyFesa.game = currentScoreboard.getDisplayName().getString();
-
-				// Update map
-				ScoreboardPlayerScore lastEntry = null;
-
-				for (ScoreboardPlayerScore scoreboardPlayerScore : currentScoreboard.getScoreboard().getAllPlayerScores(currentScoreboard)) {
-					if (scoreboardPlayerScore.getPlayerName().contains("Map:")) {
-						assert lastEntry != null;
-						NeedyFesa.gameMap = lastEntry.getPlayerName().substring(2);
-						break;
-					}
-					lastEntry = scoreboardPlayerScore;
-				}
-
-				// Auto Vote
-				if (NeedyFesa.configManager.needyFesaConfig.get("autoVote").getAsBoolean() && NeedyFesa.configManager.needyFesaConfig.has(NeedyFesa.game)) {
-					AutoVote.vote();
-				}
-			}
+		// Auto Vote
+		if (message.getString().matches(joinRegex)
+				&& NeedyFesa.configManager.needyFesaConfig.get("autoVote").getAsBoolean()
+				&& NeedyFesa.configManager.needyFesaConfig.has(GameManager.name)) {
+			AutoVote.vote();
 		}
 	}
 

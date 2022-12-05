@@ -1,8 +1,8 @@
-package fesa.needyfesa;
+package fesa.needyfesa.cubeCode;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import fesa.needyfesa.NeedyFesa;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 
@@ -14,22 +14,22 @@ public class EggWarsMapInfo {
 
     private static String colourToUnicode(String colour) {
         switch (colour) {
-            case "Black" -> {return "\u00A70";}
-            case "Dark Blue" -> {return "\u00A71";}
-            case "Dark Green" -> {return "\u00A72";}
-            case "Dark Aqua" -> {return "\u00A73";}
-            case "Dark Red" -> {return "\u00A74";}
-            case "Dark Purple" -> {return "\u00A75";}
-            case "Gold" -> {return "\u00A76";}
-            case "Gray" -> {return "\u00A77";}
-            case "Dark Gray" -> {return "\u00A78";}
-            case "Blue" -> {return "\u00A79";}
-            case "Green" -> {return "\u00A7a";}
-            case "Aqua" -> {return "\u00A7b";}
-            case "Red" -> {return "\u00A7c";}
-            case "Light Purple" -> {return "\u00A7d";}
-            case "Yellow" -> {return "\u00A7e";}
-            case "White" -> {return "\u00A7f";}
+            case "Black" -> {return "§0";}
+            case "Dark Blue" -> {return "§1";}
+            case "Dark Green" -> {return "§2";}
+            case "Dark Aqua" -> {return "§3";}
+            case "Dark Red" -> {return "§4";}
+            case "Dark Purple" -> {return "§5";}
+            case "Gold" -> {return "§6";}
+            case "Gray" -> {return "§7";}
+            case "Dark Gray" -> {return "§8";}
+            case "Blue" -> {return "§9";}
+            case "Green" -> {return "§a";}
+            case "Aqua" -> {return "§b";}
+            case "Red" -> {return "§c";}
+            case "Light Purple" -> {return "§d";}
+            case "Yellow" -> {return "§e";}
+            case "White" -> {return "§f";}
         }
         return "";
     }
@@ -65,7 +65,7 @@ public class EggWarsMapInfo {
 
         MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(req.get(0)));
         if (NeedyFesa.configManager.mapInfo.get("teamBuildLimit").getAsJsonObject().has(mapName)) {
-            String buildLimitString = "\u00A76The build limit is: " + NeedyFesa.configManager.mapInfo.get("teamBuildLimit").getAsJsonObject().get(mapName);
+            String buildLimitString = "§6The build limit is: " + NeedyFesa.configManager.mapInfo.get("teamBuildLimit").getAsJsonObject().get(mapName);
             MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(buildLimitString));
         }
 
@@ -133,7 +133,7 @@ public class EggWarsMapInfo {
             teamSide = temp;
         }
 
-        String mapLayoutString = "\u00A7dMap layout:\n\n" +
+        String mapLayoutString = "§dMap layout:\n\n" +
                 spaceMaker(4 + teamFiller.length()) + colourToUnicode(teamAcrossRight) + teamFiller +
                 spaceMaker(2) + colourToUnicode(teamAcrossLeft) + teamFiller + "\n" +
                 spaceMaker(2) + colourToUnicode(teamLeftLeft) + teamFiller +
@@ -154,7 +154,7 @@ public class EggWarsMapInfo {
         JsonArray mapLayout = mapInfo.get("layout").getAsJsonArray();
 
 
-        String mapLayoutString = "";
+        String mapLayoutString;
 
         int teamTriangleLocation = -1;
         int teamLeftRight = -1;
@@ -169,17 +169,17 @@ public class EggWarsMapInfo {
             }
         }
 
-        String teamUnderLeft = "";
-        String teamUnderRight = "";
+        String teamUnderLeft;
+        String teamUnderRight;
         String teamLeftPoint = "";
         String teamRightPoint = "";
         String teamUpLeft = "";
         String teamUpRight = "";
 
+        teamUnderLeft = mapLayout.get(0).getAsJsonArray().get(0).getAsString();
+        teamUnderRight = mapLayout.get(0).getAsJsonArray().get(1).getAsString();
         switch (teamTriangleLocation) {
             case 0 -> {
-                teamUnderLeft = mapLayout.get(0).getAsJsonArray().get(0).getAsString();
-                teamUnderRight = mapLayout.get(0).getAsJsonArray().get(1).getAsString();
                 teamLeftPoint = mapLayout.get(1).getAsJsonArray().get(0).getAsString();
                 teamRightPoint = mapLayout.get(1).getAsJsonArray().get(1).getAsString();
                 teamUpLeft = mapLayout.get(2).getAsJsonArray().get(1).getAsString();
@@ -187,15 +187,11 @@ public class EggWarsMapInfo {
             }
             case 1 -> {
                 if (teamLeftRight == 0) {
-                    teamUnderLeft = mapLayout.get(0).getAsJsonArray().get(0).getAsString();
-                    teamUnderRight = mapLayout.get(0).getAsJsonArray().get(1).getAsString();
                     teamLeftPoint = mapLayout.get(1).getAsJsonArray().get(0).getAsString();
                     teamRightPoint = mapLayout.get(1).getAsJsonArray().get(1).getAsString();
                     teamUpLeft = mapLayout.get(2).getAsJsonArray().get(1).getAsString();
                     teamUpRight = mapLayout.get(2).getAsJsonArray().get(0).getAsString();
                 } else {
-                    teamUnderLeft = mapLayout.get(2).getAsJsonArray().get(0).getAsString();
-                    teamUnderRight = mapLayout.get(2).getAsJsonArray().get(1).getAsString();
                     teamLeftPoint = mapLayout.get(1).getAsJsonArray().get(1).getAsString();
                     teamRightPoint = mapLayout.get(1).getAsJsonArray().get(0).getAsString();
                     teamUpLeft = mapLayout.get(0).getAsJsonArray().get(1).getAsString();
@@ -203,8 +199,6 @@ public class EggWarsMapInfo {
                 }
             }
             case 2 -> {
-                teamUnderLeft = mapLayout.get(2).getAsJsonArray().get(0).getAsString();
-                teamUnderRight = mapLayout.get(2).getAsJsonArray().get(1).getAsString();
                 teamLeftPoint = mapLayout.get(1).getAsJsonArray().get(1).getAsString();
                 teamRightPoint = mapLayout.get(1).getAsJsonArray().get(0).getAsString();
                 teamUpLeft = mapLayout.get(0).getAsJsonArray().get(1).getAsString();
@@ -213,7 +207,7 @@ public class EggWarsMapInfo {
         }
 
         if (teamTriangleLocation != 1) {
-            mapLayoutString = "\u00A7dMap layout:\n\n" +
+            mapLayoutString = "§dMap layout:\n\n" +
                     spaceMaker(4 + teamFiller.length()) + colourToUnicode(teamUpLeft) + teamFiller +
                     spaceMaker(6) + colourToUnicode(teamUpRight) + teamFiller + "\n" +
                     spaceMaker(2) + colourToUnicode(teamLeftPoint) + teamFiller +
@@ -221,7 +215,7 @@ public class EggWarsMapInfo {
                     spaceMaker(4 + teamFiller.length()) + colourToUnicode(teamUnderLeft) + teamFiller +
                     spaceMaker(6) + colourToUnicode(teamUnderRight) + teamFiller + "\n";
         } else {
-            mapLayoutString = "\u00A7dMap layout:\n\n" +
+            mapLayoutString = "§dMap layout:\n\n" +
                     spaceMaker(2 + teamFiller.length()) + colourToUnicode(teamRightPoint) + teamFiller + "\n" +
                     spaceMaker(2) + colourToUnicode(teamUpRight) + teamFiller +
                     spaceMaker(2 + teamFiller.length()) + colourToUnicode(teamUnderRight) + teamFiller + "\n\n" +
@@ -256,7 +250,7 @@ public class EggWarsMapInfo {
 
         StringBuilder partyMapLayoutString = new StringBuilder();
 
-        String mapLayoutString = "\u00A7dMap layout:\n\n" +
+        String mapLayoutString = "§dMap layout:\n\n" +
                 spaceMaker(4 + teamFiller.length()) + colourToUnicode(teamBefore) + teamFiller + "\n" +
                 spaceMaker(2) + colourToUnicode(teamLeft) + teamFiller + spaceMaker(teamFiller.length() + 7) +
                 colourToUnicode(teamRight) + teamFiller + "\n" +
@@ -317,7 +311,7 @@ public class EggWarsMapInfo {
             }
         }
 
-        String mapLayoutString = "\u00A7dMap layout:\n\n" +
+        String mapLayoutString = "§dMap layout:\n\n" +
                 colourToUnicode(teamAcross) + spaceMaker(2) + teamFiller + spaceMaker(7) +
                 colourToUnicode(teamSideAcross) + teamFiller + "\n\n" +
                 colourToUnicode(teamColour) + spaceMaker(2) + teamFiller + spaceMaker(7) +

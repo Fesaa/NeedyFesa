@@ -4,8 +4,9 @@
   "package": "fesa.needyfesa.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "AutoMessages",
+    "AddMessageMixin",
     "EggWarsMapInfoMixin",
+    "GameManagerMixin",
     "NameTagMixin",
     "ReplaceMessages"
   ],

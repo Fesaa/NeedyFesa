@@ -1,8 +1,10 @@
-package fesa.needyfesa;
+package fesa.needyfesa.needyFesaManagerClasses;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import fesa.needyfesa.NeedyFesa;
+import fesa.needyfesa.cubeCode.GameManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
@@ -67,7 +69,7 @@ public class ClientCommandManager {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("\u00A7bUpdated" + field.getName() + "to" + getInteger(ctx, "value") + "."));
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§bUpdated" + field.getName() + "to" + getInteger(ctx, "value") + "."));
         return Command.SINGLE_SUCCESS;
     }
 
@@ -76,43 +78,32 @@ public class ClientCommandManager {
             Object v = field.get(NeedyFesa.class);
             field.set(v, getString(ctx, "value"));
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
-        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("\u00A7bUpdated" + field.getName() + "to" + getString(ctx, "value") + "."));
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§bUpdated" + field.getName() + "to" + getString(ctx, "value") + "."));
         return Command.SINGLE_SUCCESS;
     }
 
     private static int debugFeedback() {
-        String s = "";
-        s += "\nDebug info for Needyfesa";
-        s += "\nlogParty: " + NeedyFesa.logParty;
-        s += "\nGame: " + NeedyFesa.game;
-        s += "\ngameMap: " + NeedyFesa.gameMap;
-        s += "\nteamColour: " + NeedyFesa.teamColour;
-        s += "\npartyStatus: " + NeedyFesa.partyStatus;
-        s += "\nchestPartyAnnounce: " + NeedyFesa.chestPartyAnnounce;
-        if (NeedyFesa.currentChestCoords != null) {
-            s += "\ncurrentChestCoords: " + NeedyFesa.currentChestCoords.toShortString();
-        }
-        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(s + "\n"));
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(GameManager.debugString()));
         return Command.SINGLE_SUCCESS;
     }
 
     private static int switchPartyStatus() {
-        NeedyFesa.partyStatus = !NeedyFesa.partyStatus;
-        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("\u00A7bUpdated partyStatus to " + NeedyFesa.partyStatus + "."));
+        GameManager.partyStatus = !GameManager.partyStatus;
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§bUpdated partyStatus to " + GameManager.partyStatus + "."));
         return Command.SINGLE_SUCCESS;
     }
 
     private static int switchLogParty() {
-        NeedyFesa.logParty = !NeedyFesa.logParty;
-        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("\u00A7bUpdated logParty to " + NeedyFesa.logParty + "."));
+        GameManager.logParty = !GameManager.logParty;
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§bUpdated logParty to " + GameManager.logParty + "."));
         return Command.SINGLE_SUCCESS;
     }
 
     private static int reloadFunc() {
         NeedyFesa.configManager.loadConfig();
-        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("\u00A7bReloaded all json files. Can't confirm if any of them were successful." + NeedyFesa.partyStatus));
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§bReloaded all json files. Can't confirm if any of them were successful." + GameManager.partyStatus));
         return Command.SINGLE_SUCCESS;
     }
 

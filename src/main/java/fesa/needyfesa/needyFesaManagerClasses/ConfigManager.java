@@ -1,7 +1,8 @@
-package fesa.needyfesa;
+package fesa.needyfesa.needyFesaManagerClasses;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import fesa.needyfesa.NeedyFesa;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class ConfigManager {
         autoMessagesExample.addProperty("command", false);
         autoMessagesExample.addProperty("chat", false);
         autoMessagesExample.addProperty("sound", false);
+        autoMessagesExample.addProperty("partyMessage", false);
         autoMessagesExample.addProperty("sound_id", "");
 
         autoMessagesJson.add(autoMessagesExample);

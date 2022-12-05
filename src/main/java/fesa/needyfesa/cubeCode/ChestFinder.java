@@ -1,7 +1,8 @@
-package fesa.needyfesa;
+package fesa.needyfesa.cubeCode;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import fesa.needyfesa.NeedyFesa;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
@@ -22,11 +23,11 @@ public class ChestFinder {
         assert MinecraftClient.getInstance().player != null;
         ArrayList<BlockPos> chests = getChests(NeedyFesa.configManager.staticLobbyChestLocations.get(NeedyFesa.configManager.staticLobbyChestLocations.get("current-event").getAsString()).getAsJsonArray(), range);
         if (chests.isEmpty()) {
-            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("\u00A73No chests have been found :("));
+            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§3No chests have been found :("));
         } else {
             StringBuilder s = new StringBuilder();
             for (BlockPos chest : chests) {
-                s.append("\u00A73Found a chest @\u00A72 ").append(chest.getX()).append(", ").append(chest.getY()).append(", ").append(chest.getZ()).append("\u00A76!\n");
+                s.append("§3Found a chest @§2 ").append(chest.getX()).append(", ").append(chest.getY()).append(", ").append(chest.getZ()).append("§6!\n");
             }
             MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(String.valueOf(s)));
             SoundEvent sound = Registry.SOUND_EVENT.get(new Identifier("entity.experience_orb.pickup"));
@@ -36,21 +37,21 @@ public class ChestFinder {
                     MinecraftClient.getInstance().player.getZ(), sound, SoundCategory.MASTER, 1f, 1f, true);
 
             BlockPos partyChest = chests.get(0);
-            if (NeedyFesa.partyStatus && (NeedyFesa.currentChestCoords != partyChest || NeedyFesa.chestPartyAnnounce < 3)) {
+            if (GameManager.partyStatus && (GameManager.currentChestCoords != partyChest || GameManager.chestPartyAnnounce < 3)) {
                 String msg = "@&3Found a chest @&2 " + partyChest.getX() + ", " + partyChest.getY() + ", " + partyChest.getZ() + "&6!";
                 MinecraftClient.getInstance().player.sendChatMessage(msg, Text.of(msg));
-                if (NeedyFesa.currentChestCoords != partyChest) {
-                    NeedyFesa.chestPartyAnnounce = 0;
+                if (GameManager.currentChestCoords != partyChest) {
+                    GameManager.chestPartyAnnounce = 0;
                 } else {
-                    NeedyFesa.chestPartyAnnounce++;
+                    GameManager.chestPartyAnnounce++;
                 }
             }
-            NeedyFesa.currentChestCoords = partyChest;
+            GameManager.currentChestCoords = partyChest;
         }
     }
 
     private static ArrayList<BlockPos> getChests(JsonArray lobbyChests, int range) {
-        ArrayList<BlockPos> out = new ArrayList<BlockPos>();
+        ArrayList<BlockPos> out = new ArrayList<>();
         assert MinecraftClient.getInstance().player != null;
         assert MinecraftClient.getInstance().world != null;
         ChunkPos playerPos = MinecraftClient.getInstance().player.getChunkPos();

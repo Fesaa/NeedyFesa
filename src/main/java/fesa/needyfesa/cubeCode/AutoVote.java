@@ -1,6 +1,7 @@
-package fesa.needyfesa;
+package fesa.needyfesa.cubeCode;
 
 import com.google.gson.JsonObject;
+import fesa.needyfesa.NeedyFesa;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -29,7 +30,7 @@ public class AutoVote {
         ClientPlayerInteractionManager clientPlayerInteractionManager =  MinecraftClient.getInstance().interactionManager;
         assert clientPlayerInteractionManager != null;
 
-        JsonObject voteInfo = NeedyFesa.configManager.needyFesaConfig.get(NeedyFesa.game).getAsJsonObject();
+        JsonObject voteInfo = NeedyFesa.configManager.needyFesaConfig.get(GameManager.name).getAsJsonObject();
 
         PlayerInventory inv =  p.getInventory();
         inv.selectedSlot = voteInfo.get("hotBarSlot").getAsInt();
@@ -53,7 +54,7 @@ public class AutoVote {
     private static void waitForChoiceMenu(ClientPlayerInteractionManager clientPlayerInteractionManager, ClientPlayerEntity player,
                                           int minWaitTime, int maxWaitTime, int choiceId, String currentTitle) {
         if (maxWaitTime == 0) {
-            abortedAutoVote("\u00A7b Aborted after " + NeedyFesa.configManager.needyFesaConfig.get("maxWaitTime").getAsInt() + " while waiting for a choice");
+            abortedAutoVote("§b Aborted after " + NeedyFesa.configManager.needyFesaConfig.get("maxWaitTime").getAsInt() + " while waiting for a choice");
             return;
         }
         Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()).schedule(() -> {
@@ -92,7 +93,7 @@ public class AutoVote {
     private static void waitForVote(ClientPlayerInteractionManager clientPlayerInteractionManager, ClientPlayerEntity player,
                                     int minWaitTime, int maxWaitTime, int voteId, String currentTitle) {
         if (maxWaitTime == 0) {
-            abortedAutoVote("\u00A7b Aborted after" + NeedyFesa.configManager.needyFesaConfig.get("maxWaitTime").getAsInt() + "ms while waiting for to vote");
+            abortedAutoVote("§b Aborted after" + NeedyFesa.configManager.needyFesaConfig.get("maxWaitTime").getAsInt() + "ms while waiting for to vote");
             return;
         }
         Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()).schedule(() -> {
