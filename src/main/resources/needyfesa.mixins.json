@@ -4,11 +4,10 @@
   "package": "fesa.needyfesa.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "AddMessageMixin",
-    "EggWarsMapInfoMixin",
-    "GameManagerMixin",
-    "NameTagMixin",
-    "SendMessageMixin"
+    "ChatHudMixin",
+    "ClientPlayNetworkHandlerMixin",
+    "LivingEntityRendererMixin",
+    "ChatScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

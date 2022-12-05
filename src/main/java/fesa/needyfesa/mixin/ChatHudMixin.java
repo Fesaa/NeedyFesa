@@ -1,7 +1,6 @@
 package fesa.needyfesa.mixin;
 
 import com.google.gson.JsonObject;
-import fesa.needyfesa.cubeCode.AutoVote;
 import fesa.needyfesa.cubeCode.ChestFinder;
 import fesa.needyfesa.NeedyFesa;
 import fesa.needyfesa.cubeCode.CubeVarManager;
@@ -25,7 +24,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Mixin(ChatHud.class)
-public class AddMessageMixin {
+public class ChatHudMixin {
 
 	@Inject(at = @At("HEAD"), method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V")
 	private void addMessage(Text message, @Nullable MessageSignatureData signature, int ticks, @Nullable MessageIndicator indicator, boolean refresh, CallbackInfo info) {
