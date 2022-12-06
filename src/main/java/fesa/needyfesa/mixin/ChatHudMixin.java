@@ -62,9 +62,7 @@ public class ChatHudMixin {
 					p.sendChatMessage(msg, Text.of(msg));
 				}
 
-				if (autoMessage.has("party_message")
-						&& autoMessage.get("party_message").getAsBoolean()
-						&& CubeVarManager.partyStatus) {
+				if (autoMessage.get("party_message").getAsBoolean() && CubeVarManager.partyStatus) {
 					p.sendChatMessage("@" + msg, Text.of("@" + msg));
 				}
 
