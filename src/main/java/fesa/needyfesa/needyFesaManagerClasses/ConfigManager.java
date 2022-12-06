@@ -1,11 +1,14 @@
 package fesa.needyfesa.needyFesaManagerClasses;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fesa.needyfesa.NeedyFesa;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class ConfigManager {
 
@@ -14,6 +17,8 @@ public class ConfigManager {
     public ConfigObjectClass staticReplaceMessages;
     public ConfigObjectClass mapInfo;
     public ConfigObjectClass needyFesaConfig;
+
+    public HashMap<String, Pattern> configCompiledRegex = new HashMap<>();
 
     private ArrayList<ConfigObjectClass> configObjectClasses;
 
@@ -42,6 +47,7 @@ public class ConfigManager {
         autoMessagesExample.addProperty("chat", false);
         autoMessagesExample.addProperty("sound", false);
         autoMessagesExample.addProperty("party_message", false);
+        autoMessagesExample.addProperty("regex_matching", false);
         autoMessagesExample.addProperty("sound_id", "");
 
         autoMessagesJson.add(autoMessagesExample);
@@ -112,6 +118,16 @@ public class ConfigManager {
     public void loadConfig() {
         for (ConfigObjectClass configObjectClass: configObjectClasses) {
             configObjectClass.configure();
+        }
+    }
+
+    public void processConfig() {
+        // Compiling needed Regex's
+        for (JsonElement autoMessage : staticAutoMessages.getAsJsonArray()) {
+            if (autoMessage.getAsJsonObject().get("regex_matching").getAsBoolean())  {
+                this.configCompiledRegex.put(autoMessage.getAsJsonObject().get("msg").getAsString(),
+                        Pattern.compile(autoMessage.getAsJsonObject().get("regex").getAsString()));
+            }
         }
     }
 }

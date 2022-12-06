@@ -122,4 +122,6 @@ public class ConfigObjectClass {
     }
 
     public boolean has(String memberName) { return this.jsonObjectData.has(memberName);}
+
+    public JsonArray getAsJsonArray() {return this.jsonArrayData;}
 }

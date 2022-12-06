@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.regex.Matcher;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -31,9 +32,6 @@ public class ChatHudMixin {
 		assert MinecraftClient.getInstance().player != null;
 		ClientPlayerEntity p = MinecraftClient.getInstance().player;
 
-		String joinRegex = "\\[\\+\\] .{0,3}" + p.getName().getString() + ".{0,3} joined your game \\(\\d{1,3}\\/\\d{1,3}\\)\\.";
-		String chestRegex = "A chest has been hidden somewhere in the Lobby with some goodies inside!";
-
 		for (int i = 0; i < NeedyFesa.configManager.staticAutoMessages.size(); i++) {
 			JsonObject autoMessage = NeedyFesa.configManager.staticAutoMessages.get(i).getAsJsonObject();
 			String regexString = autoMessage.get("regex").getAsString();
@@ -41,9 +39,21 @@ public class ChatHudMixin {
 			regexString = regexString.replace("&player", p.getName().getString());
 
 			String msg = autoMessage.get("msg").getAsString();
+			boolean alreadyMatched = false;
 
+			if (autoMessage.get("regex_matching").getAsBoolean()) {
+				Matcher matcher = NeedyFesa.configManager.configCompiledRegex.get(msg).matcher(message.getString());
+				if (matcher.matches()) {
+					alreadyMatched = true;
+					for (int j = 0; j < matcher.groupCount(); j++) {
+						msg = msg.replace("&" + (j+1), matcher.group(j+1));
+					}
+				} else {
+					continue;
+				}
+			}
 
-			if (message.getString().matches(regexString)) {
+			if (alreadyMatched || message.getString().matches(regexString)) {
 				if (autoMessage.get("command").getAsBoolean()) {
 					p.sendCommand(msg);
 				}
@@ -65,7 +75,7 @@ public class ChatHudMixin {
 		}
 
 		// Chest Finder
-		if (message.getString().matches(chestRegex)) {
+		if (message.getString().matches("A chest has been hidden somewhere in the Lobby with some goodies inside!")) {
 			Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()).schedule(() -> {
 				if (CubeVarManager.name.equals("CubeCraft")) {
 					ChestFinder.chestRequest(10);

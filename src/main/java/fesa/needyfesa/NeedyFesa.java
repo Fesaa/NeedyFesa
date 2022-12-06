@@ -17,6 +17,7 @@ public class NeedyFesa implements ModInitializer {
 
 		configManager.initConfig();
 		configManager.loadConfig();
+		configManager.processConfig();
 
 		KeyBindManager.loadKeyBinds();
 		KeyBindManager.registerEvents();
