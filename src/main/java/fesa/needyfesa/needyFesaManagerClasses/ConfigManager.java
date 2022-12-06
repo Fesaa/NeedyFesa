@@ -41,11 +41,11 @@ public class ConfigManager {
         autoMessagesExample.addProperty("command", false);
         autoMessagesExample.addProperty("chat", false);
         autoMessagesExample.addProperty("sound", false);
-        autoMessagesExample.addProperty("partyMessage", false);
+        autoMessagesExample.addProperty("party_message", false);
         autoMessagesExample.addProperty("sound_id", "");
 
         autoMessagesJson.add(autoMessagesExample);
-        staticAutoMessages = (new ConfigObjectClass()).make(new File("./config/NeedyFesa/staticAutoMessages.json"), autoMessagesJson);
+        staticAutoMessages = (new ConfigObjectClass()).make(new File("./config/NeedyFesa/staticAutoMessages.json"), autoMessagesJson, autoMessagesExample);
         configObjectClasses.add(staticAutoMessages);
 
         // Replace Messages
@@ -56,7 +56,7 @@ public class ConfigManager {
         replaceMessageExample.addProperty("msg", "");
 
         replaceMessagesJson.add(replaceMessageExample);
-        staticReplaceMessages = (new ConfigObjectClass()).make(new File("./config/NeedyFesa/staticReplaceMessages.json"), replaceMessagesJson);
+        staticReplaceMessages = (new ConfigObjectClass()).make(new File("./config/NeedyFesa/staticReplaceMessages.json"), replaceMessagesJson, replaceMessageExample);
         configObjectClasses.add(staticReplaceMessages);
 
         // EggWars Map Info

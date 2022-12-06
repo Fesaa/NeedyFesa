@@ -46,7 +46,6 @@ public class ClientPlayNetworkHandlerMixin {
         MinecraftClient mc = MinecraftClient.getInstance();
         ClientWorld world = mc.world;
         if (world == null) {
-            CubeVarManager.serverIP = "";
             CubeVarManager.partyStatus = false;
             return;
         }

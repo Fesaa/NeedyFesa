@@ -13,6 +13,7 @@ public class ConfigObjectClass {
     private File configFile;
     private JsonObject defaultJsonObject;
     private JsonArray defaultJsonArray;
+    private JsonObject defaultJsonArrayLayout;
     private JsonObject jsonObjectData;
     private JsonArray jsonArrayData;
 
@@ -23,9 +24,10 @@ public class ConfigObjectClass {
         return this;
     }
 
-    public ConfigObjectClass make(File cFile, JsonArray dJsonArray) {
+    public ConfigObjectClass make(File cFile, JsonArray dJsonArray, JsonObject dJsonObject) {
         this.configFile = cFile;
         this.defaultJsonArray = dJsonArray;
+        this.defaultJsonArrayLayout = dJsonObject;
         return this;
     }
 
@@ -46,6 +48,7 @@ public class ConfigObjectClass {
                     NeedyFesa.LOGGER.error(this.configFile.getName() + " was not found! Needyfesa might not work as expected.");
                     e.printStackTrace();
                 }
+                validate(this.jsonArrayData, this.defaultJsonArrayLayout);
             } else {
                 try {
                     this.jsonObjectData = (new Gson()).fromJson(new FileReader(this.configFile.getPath()), JsonObject.class);
@@ -55,6 +58,30 @@ public class ConfigObjectClass {
                 }
                 validate(this.jsonObjectData, this.defaultJsonObject);
             }
+        }
+    }
+
+    private void validate(JsonArray configData, JsonObject defaultConfigData) {
+        boolean changed = false;
+
+        if (configData.size() == 0) {
+            JsonArray jsonArray = new JsonArray();
+            jsonArray.add(defaultConfigData);
+            writeToFile(jsonArray.toString());
+        } else {
+            for (JsonElement jsonElement : configData) {
+                for (String key :  defaultConfigData.keySet()) {
+                    if (!jsonElement.getAsJsonObject().has(key)) {
+                        jsonElement.getAsJsonObject().add(key, defaultConfigData.get(key));
+                        changed = true;
+                    }
+                }
+            }
+
+            if (changed) {
+                writeToFile(configData.toString());
+            }
+
         }
     }
 
