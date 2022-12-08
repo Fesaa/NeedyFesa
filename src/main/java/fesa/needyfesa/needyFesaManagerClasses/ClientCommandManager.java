@@ -4,10 +4,11 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import fesa.needyfesa.NeedyFesa;
-import fesa.needyfesa.cubeCode.CubeVarManager;
+import fesa.needyfesa.cubeCode.VarManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ServerInfo;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 
@@ -36,9 +37,11 @@ public class ClientCommandManager {
                             .executes(ctx -> debugFeedback()))
                     .then(literal("reload")
                             .executes(ctx -> reloadFunc()))
+                    .then(literal("update-server-ip")
+                            .executes(ctx -> updateServerIp(ctx)))
             );
 
-            for (Field field: CubeVarManager.class.getFields()) {
+            for (Field field: VarManager.class.getFields()) {
                 if (!(field.getName().equals("LOGGER") || field.getName().equals("configManager"))) {
                     if (field.getType().equals(String.class)) {
                         dispatcher.register(literal("NeedyFesa")
@@ -58,13 +61,26 @@ public class ClientCommandManager {
                 }
             }
         }
+    }
+
+    private static int updateServerIp(CommandContext<FabricClientCommandSource> ctx) {
 
 
+
+
+        ServerInfo server = MinecraftClient.getInstance().getCurrentServerEntry();
+        if (server != null) {
+            VarManager.serverIP = server.address.split(":")[0];
+            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§bUpdated to server ip to " + VarManager.serverIP));
+        } else {
+            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§4Server was null?"));
+        }
+        return Command.SINGLE_SUCCESS;
     }
 
     private static int changeIntField(Field field, CommandContext<FabricClientCommandSource> ctx) {
         try {
-            Object v = field.get(CubeVarManager.class);
+            Object v = field.get(VarManager.class);
             field.set(v, getInteger(ctx, "value"));
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -75,7 +91,7 @@ public class ClientCommandManager {
 
     private static int changeStringField(Field field, CommandContext<FabricClientCommandSource> ctx) {
         try {
-            Object v = field.get(CubeVarManager.class);
+            Object v = field.get(VarManager.class);
             field.set(v, getString(ctx, "value"));
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -85,19 +101,19 @@ public class ClientCommandManager {
     }
 
     private static int debugFeedback() {
-        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(CubeVarManager.debugString()));
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(VarManager.debugString()));
         return Command.SINGLE_SUCCESS;
     }
 
     private static int switchPartyStatus() {
-        CubeVarManager.partyStatus = !CubeVarManager.partyStatus;
-        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§bUpdated partyStatus to " + CubeVarManager.partyStatus + "."));
+        VarManager.partyStatus = !VarManager.partyStatus;
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§bUpdated partyStatus to " + VarManager.partyStatus + "."));
         return Command.SINGLE_SUCCESS;
     }
 
     private static int switchLogParty() {
-        CubeVarManager.logParty = !CubeVarManager.logParty;
-        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§bUpdated logParty to " + CubeVarManager.logParty + "."));
+        VarManager.logParty = !VarManager.logParty;
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of("§bUpdated logParty to " + VarManager.logParty + "."));
         return Command.SINGLE_SUCCESS;
     }
 

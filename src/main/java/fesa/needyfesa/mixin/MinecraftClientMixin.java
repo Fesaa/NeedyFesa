@@ -1,6 +1,6 @@
 package fesa.needyfesa.mixin;
 
-import fesa.needyfesa.cubeCode.CubeVarManager;
+import fesa.needyfesa.cubeCode.VarManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,6 +13,6 @@ public class MinecraftClientMixin {
 
     @Inject(at = @At(value = "INVOKE", target= "Lnet/minecraft/client/MinecraftClientGame;onLeaveGameSession()V"), method="disconnect(Lnet/minecraft/client/gui/screen/Screen;)V")
     public void onDisconnect(Screen s, CallbackInfo info) {
-        CubeVarManager.partyStatus = false;
+        VarManager.partyStatus = false;
     }
 }

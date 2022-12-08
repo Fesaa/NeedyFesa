@@ -2,7 +2,7 @@ package fesa.needyfesa.mixin;
 
 import fesa.needyfesa.NeedyFesa;
 import fesa.needyfesa.cubeCode.AutoVote;
-import fesa.needyfesa.cubeCode.CubeVarManager;
+import fesa.needyfesa.cubeCode.VarManager;
 import fesa.needyfesa.cubeCode.EggWarsMapInfo;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -34,9 +34,9 @@ public class ClientPlayNetworkHandlerMixin {
 
     @ModifyArg(method = "onTitle", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;setTitle(Lnet/minecraft/text/Text;)V"))
     public Text onTitle(Text title) {
-        if (CubeVarManager.name.equals("Team EggWars") && title.toString().contains("8")) {
-            CubeVarManager.teamColour = getTeamColour();
-            EggWarsMapInfo.handleRequest(CubeVarManager.map, CubeVarManager.teamColour, CubeVarManager.partyStatus && CubeVarManager.logParty);
+        if (VarManager.name.equals("Team EggWars") && title.toString().contains("8")) {
+            VarManager.teamColour = getTeamColour();
+            EggWarsMapInfo.handleRequest(VarManager.map, VarManager.teamColour, VarManager.partyStatus && VarManager.logParty);
         }
         return title;
     }
@@ -46,7 +46,7 @@ public class ClientPlayNetworkHandlerMixin {
         MinecraftClient mc = MinecraftClient.getInstance();
         ClientWorld world = mc.world;
         if (world == null) {
-            CubeVarManager.partyStatus = false;
+            VarManager.partyStatus = false;
             return;
         }
         waitForScoreBoard(world);
@@ -78,20 +78,20 @@ public class ClientPlayNetworkHandlerMixin {
 
         if (connection.getAddress().toString().contains("play.cubecraft.net")
                 || connection.getAddress().toString().contains("ccgn.co")) {
-            CubeVarManager.map = map;
-            CubeVarManager.name = currentScoreboard.getDisplayName().getString();
-            CubeVarManager.teamColour = getTeamColour();
-            CubeVarManager.serverIP = "play.cubecraft.net";
+            VarManager.map = map;
+            VarManager.name = currentScoreboard.getDisplayName().getString();
+            VarManager.teamColour = getTeamColour();
+            VarManager.serverIP = "play.cubecraft.net";
 
             if (NeedyFesa.configManager.needyFesaConfig.get("autoVote").getAsBoolean()
-                    && NeedyFesa.configManager.needyFesaConfig.has(CubeVarManager.name)) {
+                    && NeedyFesa.configManager.needyFesaConfig.has(VarManager.name)) {
                 AutoVote.vote();
             }
 
 
         } else {
-            CubeVarManager.serverIP = connection.getAddress().toString();
-            CubeVarManager.partyStatus = false;
+            VarManager.serverIP = connection.getAddress().toString();
+            VarManager.partyStatus = false;
         }
     }
 

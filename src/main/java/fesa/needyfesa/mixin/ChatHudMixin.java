@@ -3,7 +3,7 @@ package fesa.needyfesa.mixin;
 import com.google.gson.JsonObject;
 import fesa.needyfesa.cubeCode.ChestFinder;
 import fesa.needyfesa.NeedyFesa;
-import fesa.needyfesa.cubeCode.CubeVarManager;
+import fesa.needyfesa.cubeCode.VarManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.MessageIndicator;
@@ -62,7 +62,7 @@ public class ChatHudMixin {
 					p.sendChatMessage(msg, Text.of(msg));
 				}
 
-				if (autoMessage.get("party_message").getAsBoolean() && CubeVarManager.partyStatus) {
+				if (autoMessage.get("party_message").getAsBoolean() && VarManager.partyStatus) {
 					p.sendChatMessage("@" + msg, Text.of("@" + msg));
 				}
 
@@ -75,7 +75,7 @@ public class ChatHudMixin {
 		// Chest Finder
 		if (message.getString().matches("A chest has been hidden somewhere in the Lobby with some goodies inside!")) {
 			Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()).schedule(() -> {
-				if (CubeVarManager.name.equals("CubeCraft")) {
+				if (VarManager.name.equals("CubeCraft")) {
 					ChestFinder.chestRequest(10);
 				}
 			}, 1000, TimeUnit.MILLISECONDS);
@@ -84,16 +84,16 @@ public class ChatHudMixin {
 
 		// Party Status tracker
 		if (message.getString().matches("You have joined [a-zA-Z0-9_]{2,16}'s party!")) {
-			CubeVarManager.partyStatus = true;
+			VarManager.partyStatus = true;
 		}
 		if (message.getString().matches("You have left your party!")
 			|| message.getString().matches("You were kicked from your party!")
 			|| message.getString().matches("The party has been disbanded!")) {
-			CubeVarManager.partyStatus = false;
+			VarManager.partyStatus = false;
 		}
 
-		if (message.getString().matches("[a-zA-Z0-9_]{2,16} joined the party!") && !CubeVarManager.partyStatus) {
-			CubeVarManager.partyStatus = true;
+		if (message.getString().matches("[a-zA-Z0-9_]{2,16} joined the party!") && !VarManager.partyStatus) {
+			VarManager.partyStatus = true;
 		}
 	}
 

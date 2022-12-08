@@ -37,16 +37,16 @@ public class ChestFinder {
                     MinecraftClient.getInstance().player.getZ(), sound, SoundCategory.MASTER, 1f, 1f, true);
 
             BlockPos partyChest = chests.get(0);
-            if (CubeVarManager.partyStatus && (CubeVarManager.currentChestCoords != partyChest || CubeVarManager.chestPartyAnnounce < 3)) {
+            if (VarManager.partyStatus && (VarManager.currentChestCoords != partyChest || VarManager.chestPartyAnnounce < 3)) {
                 String msg = "@&3Found a chest @&2 " + partyChest.getX() + ", " + partyChest.getY() + ", " + partyChest.getZ() + "&6!";
                 MinecraftClient.getInstance().player.sendChatMessage(msg, Text.of(msg));
-                if (CubeVarManager.currentChestCoords != partyChest) {
-                    CubeVarManager.chestPartyAnnounce = 0;
+                if (VarManager.currentChestCoords != partyChest) {
+                    VarManager.chestPartyAnnounce = 0;
                 } else {
-                    CubeVarManager.chestPartyAnnounce++;
+                    VarManager.chestPartyAnnounce++;
                 }
             }
-            CubeVarManager.currentChestCoords = partyChest;
+            VarManager.currentChestCoords = partyChest;
         }
     }
 

@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import fesa.needyfesa.cubeCode.AutoVote;
 import fesa.needyfesa.cubeCode.ChestFinder;
 import fesa.needyfesa.cubeCode.EggWarsMapInfo;
-import fesa.needyfesa.cubeCode.CubeVarManager;
+import fesa.needyfesa.cubeCode.VarManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
@@ -36,7 +36,7 @@ public class KeyBindManager {
                     switch (keyBind.getTranslationKey()) {
                         case "Chest Finder" -> ChestFinder.chestRequest(10);
                         case "Auto Vote [EggWars]" -> AutoVote.vote();
-                        case "Map Info" -> EggWarsMapInfo.handleRequest(CubeVarManager.map, CubeVarManager.teamColour, false);
+                        case "Map Info" -> EggWarsMapInfo.handleRequest(VarManager.map, VarManager.teamColour, false);
                     }
                 }
             }
