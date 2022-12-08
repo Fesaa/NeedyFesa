@@ -79,6 +79,7 @@ public class ConfigManager {
         needyFesaConfigJson.addProperty("minWaitTime", 50);
         needyFesaConfigJson.addProperty("maxWaitTime", 1000);
         needyFesaConfigJson.addProperty("development-mode", false);
+        needyFesaConfigJson.addProperty("spam-prevention", true);
 
         JsonObject eggWarsVoting = new JsonObject();
         eggWarsVoting.addProperty("leftVoteId", 16);

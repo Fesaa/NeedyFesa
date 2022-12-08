@@ -1,7 +1,6 @@
 package fesa.needyfesa.cubeCode;
 
 import net.minecraft.util.math.BlockPos;
-import java.lang.reflect.Field;
 
 public class CubeVarManager {
     public static String map = "";
@@ -16,17 +15,15 @@ public class CubeVarManager {
     public static BlockPos currentChestCoords = null;
 
     public static String debugString() {
-        StringBuilder s = new StringBuilder();
-        s.append("\nDebug info for Needyfesa");
-        s.append("\nMap: ").append(map);
-        s.append("\nteamColour: ").append(teamColour);
-        s.append("\nname: ").append(name);
-        s.append("\nserverIP: ").append(serverIP);
-        s.append("\npartyStatus: ").append(partyStatus);
-        s.append("\nlogParty: ").append(logParty);
-        s.append("\nchestPartyAnnounce: ").append(chestPartyAnnounce);
-        s.append("\n");
-        return s.toString();
+        return "\nDebug info for Needyfesa" +
+                "\nMap: " + map +
+                "\nteamColour: " + teamColour +
+                "\nname: " + name +
+                "\nserverIP: " + serverIP +
+                "\npartyStatus: " + partyStatus +
+                "\nlogParty: " + logParty +
+                "\nchestPartyAnnounce: " + chestPartyAnnounce +
+                "\n";
     }
 
 }
