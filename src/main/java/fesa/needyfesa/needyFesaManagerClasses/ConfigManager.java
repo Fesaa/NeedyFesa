@@ -80,6 +80,14 @@ public class ConfigManager {
         needyFesaConfigJson.addProperty("maxWaitTime", 1000);
         needyFesaConfigJson.addProperty("development-mode", false);
         needyFesaConfigJson.addProperty("spam-prevention", true);
+        needyFesaConfigJson.addProperty("spam-time", 5);
+        needyFesaConfigJson.addProperty("spam-count", 3);
+
+        JsonArray spamPreventionServersList = new JsonArray();
+        spamPreventionServersList.add("play.cubecraft.net");
+        spamPreventionServersList.add("");
+
+        needyFesaConfigJson.add("spam-prevention-servers", spamPreventionServersList);
 
         JsonObject eggWarsVoting = new JsonObject();
         eggWarsVoting.addProperty("leftVoteId", 16);

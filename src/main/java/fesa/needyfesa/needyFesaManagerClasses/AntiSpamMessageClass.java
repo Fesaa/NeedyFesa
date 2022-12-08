@@ -1,49 +1,35 @@
 package fesa.needyfesa.needyFesaManagerClasses;
 
+
+import fesa.needyfesa.NeedyFesa;
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 
 public class AntiSpamMessageClass {
 
-    private final ZoneOffset zoneOffset = ZoneOffset.UTC;
+    private static final int spamTimeMinute = NeedyFesa.configManager.needyFesaConfig.get("spam-time").getAsInt();
+    private static final int spamCount = NeedyFesa.configManager.needyFesaConfig.get("spam-count").getAsInt();
 
+    private final ZoneOffset zoneOffset = ZoneOffset.UTC;
     private final ArrayList<Long> sendTimes = new ArrayList<>();
-    private int count;
 
     public AntiSpamMessageClass create(LocalDateTime sendTime) {
         this.sendTimes.add(sendTime.toEpochSecond(zoneOffset));
-        this.count = 0;
-
-        return  this;
+        return this;
     }
-
-    public void update(LocalDateTime sendTime) {
-        long sendTimeEpochSecond = sendTime.toEpochSecond(zoneOffset);
-
-        this.sendTimes.add(sendTimeEpochSecond);
-        this.count++;
-
-        // Remove messages more than 5 minutes ago
-        for (long epochSecond : sendTimes) {
-            if (sendTimeEpochSecond - epochSecond > 5 * 60) {
-                sendTimes.remove(epochSecond);
-            }
-        }
-    }
-
-    public boolean safe() {
-        return this.sendTimes.size() < 2;
-    }
-
-    public boolean checkToDelete() {
+    public void update(LocalDateTime sendTime) {this.sendTimes.add(sendTime.toEpochSecond(zoneOffset));}
+    public boolean safe() {return sendTimes.size() - countPassed() < spamCount;}
+    public boolean checkToDelete() {return sendTimes.size() == countPassed();}
+    private int countPassed() {
         long now = LocalDateTime.now().toEpochSecond(zoneOffset);
-        // Remove messages more than 5 minutes ago
+        int count = 0;
         for (long epochSecond : sendTimes) {
-            if (now - epochSecond > 5 * 60) {
-                sendTimes.remove(epochSecond);
+            if (now - epochSecond > spamTimeMinute * 60L) {
+                count++;
             }
         }
-        return sendTimes.size() == 0;
+        return count;
     }
 }
