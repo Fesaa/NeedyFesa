@@ -82,25 +82,14 @@ public class EggWarsMapInfo {
         if (!NeedyFesa.configManager.mapInfo.get("teamColourOrder").getAsJsonObject().has(mapName)) {
             return null;
         }
-
         JsonObject MapInfo = NeedyFesa.configManager.mapInfo.get("teamColourOrder").getAsJsonObject().get(mapName).getAsJsonObject();
 
-        if (MapInfo.get("style").getAsString().equals("cross")) {
-            return MakeMapLayoutCross(teamColour, MapInfo);
+        switch (MapInfo.get("style").getAsString()) {
+            case "cross" -> {return MakeMapLayoutCross(teamColour, MapInfo);}
+            case "square" -> {return MakeMapLayoutSquare(teamColour, MapInfo);}
+            case "double_triangle" -> {return MakeMapLayoutDoubleTriangle(teamColour, MapInfo);}
+            case "double_cross" -> {return MakeMapLayoutDoubleCross(teamColour, MapInfo);}
         }
-
-        if (MapInfo.get("style").getAsString().equals("square")) {
-            return MakeMapLayoutSquare(teamColour, MapInfo);
-        }
-
-        if (MapInfo.get("style").getAsString().equals("double_triangle")) {
-            return MakeMapLayoutDoubleTriangle(teamColour, MapInfo);
-        }
-
-        if (MapInfo.get("style").getAsString().equals("double_cross")) {
-            return MakeMapLayoutDoubleCross(teamColour, MapInfo);
-        }
-
         return null;
     }
 

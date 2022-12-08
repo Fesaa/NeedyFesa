@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 
@@ -20,9 +21,9 @@ public class KeyBindManager {
 
     public static void loadKeyBinds() {
         JsonObject keyBindsJson = new JsonObject();
-        keyBindsJson.addProperty("Chest Finder", 327);
-        keyBindsJson.addProperty("Auto Vote [EggWars]", 328);
-        keyBindsJson.addProperty("Map Info", 329);
+        keyBindsJson.addProperty("Chest Finder", GLFW.GLFW_KEY_KP_7);
+        keyBindsJson.addProperty("Auto Vote [EggWars]", GLFW.GLFW_KEY_KP_8);
+        keyBindsJson.addProperty("Map Info", GLFW.GLFW_KEY_KP_9);
 
         keyBinds = keyBindsJson;
         registerKeyBinds();
