@@ -97,6 +97,15 @@ public class ConfigObjectClass {
             writeToFile(configData.toString());
         }
     }
+    public void save() {
+        String jsonString;
+        if (this.defaultJsonObject == null) {
+            jsonString = this.defaultJsonArray.toString();
+        } else {
+            jsonString = this.defaultJsonObject.toString();
+        }
+        writeToFile(jsonString);
+    }
     private void writeToFile(String jsonString) {
         if (jsonString != null) {
             try {
@@ -124,4 +133,6 @@ public class ConfigObjectClass {
     public boolean has(String memberName) { return this.jsonObjectData.has(memberName);}
 
     public JsonArray getAsJsonArray() {return this.jsonArrayData;}
+
+    public JsonObject getAsJsonObject() {return  this.jsonObjectData;}
 }

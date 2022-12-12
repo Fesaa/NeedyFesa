@@ -139,4 +139,10 @@ public class ConfigManager {
             }
         }
     }
+
+    public void saveConfig() {
+        for (ConfigObjectClass configObjectClass : configObjectClasses) {
+            configObjectClass.save();
+        }
+    }
 }
