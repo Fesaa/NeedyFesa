@@ -141,6 +141,16 @@ public class NeedyFesaConfigScreens {
         configCategoryBuild.option(listStringOption("general", "current-event", ID, NeedyFesa.configManager.staticLobbyChestLocations.getAsJsonObject(), event_list, current_event));
         configCategoryBuild.option(booleanOption("general", "spam-prevention", ID, NeedyFesa.configManager.needyFesaConfig.getAsJsonObject()));
         configCategoryBuild.option(booleanOption("general", "development-mode", ID, NeedyFesa.configManager.needyFesaConfig.getAsJsonObject()));
+        configCategoryBuild.option(Option.createBuilder(int.class)
+                        .name(Text.translatable(ID + ".general.maxChatHistory"))
+                        .tooltip(Text.translatable(ID + ".general.maxChatHistory.desc"))
+                        .binding(
+                                NeedyFesa.configManager.needyFesaConfig.get("maxChatHistory").getAsInt(),
+                                () -> NeedyFesa.configManager.needyFesaConfig.get("maxChatHistory").getAsInt(),
+                                (value) -> NeedyFesa.configManager.needyFesaConfig.getAsJsonObject().addProperty("maxChatHistory", value)
+                        )
+                        .controller(opt -> new IntegerSliderController(opt, 100, 10000, 10))
+                .build());
 
         return configCategoryBuild.build();
     }

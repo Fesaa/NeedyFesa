@@ -3,6 +3,8 @@
   "needyfesa.general.desc": "Enable and disable core features of NeedyFesa.",
   "needyfesa.general.autoVote": "Auto Vote",
   "needyfesa.general.autoVote.desc": "Disable or enable AutoVote globally. Customise its features in the AutoVote category.",
+  "needyfesa.general.maxChatHistory": "Max chat history",
+  "needyfesa.general.maxChatHistory.desc": "Change the maximum number of lines in chat.",
   "needyfesa.general.autoMessages": "Chat Listener",
   "needyfesa.general.autoMessages.desc": "Disable or enable the Chat Listener globally. Customise its features in the Chat Listener category.",
   "needyfesa.general.chatReplacement": "Chat Replacement",

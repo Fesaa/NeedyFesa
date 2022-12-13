@@ -87,6 +87,7 @@ public class ConfigManager {
         needyFesaConfigJson.addProperty("autoMessages", true);
         needyFesaConfigJson.addProperty("chatReplacement", true);
         needyFesaConfigJson.addProperty("chestFinder", true);
+        needyFesaConfigJson.addProperty("maxChatHistory", 1000);
 
         JsonArray spamPreventionServersList = new JsonArray();
         spamPreventionServersList.add("play.cubecraft.net");
