@@ -135,4 +135,9 @@ public class ConfigObjectClass {
     public JsonArray getAsJsonArray() {return this.jsonArrayData;}
 
     public JsonObject getAsJsonObject() {return  this.jsonObjectData;}
+
+    public void addDefaultToArray() {
+        this.jsonArrayData.add(this.defaultJsonArrayLayout);
+    }
+
 }

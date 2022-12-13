@@ -1,14 +1,18 @@
 package fesa.needyfesa.GUI;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.isxander.yacl.api.*;
 import dev.isxander.yacl.gui.controllers.TickBoxController;
 import dev.isxander.yacl.gui.controllers.cycling.CyclingListController;
+import dev.isxander.yacl.gui.controllers.slider.IntegerSliderController;
 import dev.isxander.yacl.gui.controllers.string.StringController;
 import dev.isxander.yacl.gui.controllers.string.number.IntegerFieldController;
 import fesa.needyfesa.NeedyFesa;
 import fesa.needyfesa.cubeCode.HashMaps;
+import fesa.needyfesa.needyFesaManagerClasses.ConfigObjectClass;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
@@ -28,6 +32,34 @@ public class NeedyFesaConfigScreens {
                 .category(replaceMessages(ID))
                 .category(autoVote(ID))
                 .save(NeedyFesa.configManager::saveConfig)
+                .build()
+                .generateScreen(parent);
+    }
+
+    public static Screen baseScreen(Screen parent, int topCategory) {
+        String ID = "needyfesa";
+
+        ArrayList<ConfigCategory> configCategories = new ArrayList<>();
+        configCategories.add(general(ID));
+        configCategories.add(autoMessages(ID));
+        configCategories.add(replaceMessages(ID));
+        configCategories.add(autoVote(ID));
+
+        YetAnotherConfigLib.Builder builder = YetAnotherConfigLib.createBuilder();
+
+        builder.title(Text.translatable(ID + "title"));
+
+        for (ConfigCategory configCategory : configCategories.subList(topCategory, configCategories.size())) {
+            builder.category(configCategory);
+        }
+
+        if (topCategory != 0) {
+            for (ConfigCategory configCategory : configCategories.subList(0, topCategory)) {
+                builder.category(configCategory);
+            }
+        }
+
+        return builder.save(NeedyFesa.configManager::saveConfig)
                 .build()
                 .generateScreen(parent);
     }
@@ -114,28 +146,19 @@ public class NeedyFesaConfigScreens {
     }
 
     private static ConfigCategory replaceMessages(String ID) {
-        ConfigCategory.Builder configCategoryBuild = ConfigCategory.createBuilder();
+        ConfigCategory.Builder configCategoryBuilder = ConfigCategory.createBuilder();
 
-        configCategoryBuild.name(Text.translatable(ID + ".replaceMessages.title"));
-        configCategoryBuild.tooltip(Text.translatable(ID + ".replaceMessages.desc"));
+        configCategoryBuilder.name(Text.translatable(ID + ".replaceMessages.title"));
+        configCategoryBuilder.tooltip(Text.translatable(ID + ".replaceMessages.desc"));
 
         int i = 1;
         for (JsonElement replaceMessageElement :  NeedyFesa.configManager.staticReplaceMessages.getAsJsonArray()) {
             JsonObject replacementMessage = replaceMessageElement.getAsJsonObject();
-            OptionGroup.Builder optionGroupBuilder = OptionGroup.createBuilder();
-
-            optionGroupBuilder.name(Text.of("Text replacement #" + i)); i++;
-
-            optionGroupBuilder.option(booleanOption("replaceMessages", "enabled", ID, replacementMessage));
-            optionGroupBuilder.option(StringOption("replaceMessages", "text", ID, replacementMessage));
-            optionGroupBuilder.option(StringOption("replaceMessages", "msg", ID, replacementMessage));
-
-            optionGroupBuilder.collapsed(true);
-            configCategoryBuild.group(optionGroupBuilder.build());
+            configCategoryBuilder.group(replaceMessageGroup(replacementMessage, i, ID)); i++;
         }
 
-
-        return configCategoryBuild.build();
+        configCategoryBuilder.option(addButton(NeedyFesa.configManager.staticReplaceMessages,2, ID));
+        return configCategoryBuilder.build();
     }
 
     private static ConfigCategory autoMessages(String ID) {
@@ -147,24 +170,81 @@ public class NeedyFesaConfigScreens {
         int i = 1;
         for (JsonElement autoMessageElement : NeedyFesa.configManager.staticAutoMessages.getAsJsonArray()) {
             JsonObject autoMessage = autoMessageElement.getAsJsonObject();
-            OptionGroup.Builder optionGroupBuilder = OptionGroup.createBuilder();
-
-            optionGroupBuilder.name(Text.of("Chat Listener #" + i)); i++;
-
-            optionGroupBuilder.option(booleanOption("autoMessages", "enabled", ID, autoMessage));
-            optionGroupBuilder.option(StringOption("autoMessages", "regex", ID, autoMessage));
-            optionGroupBuilder.option(booleanOption("autoMessages", "regex_matching", ID, autoMessage));
-            optionGroupBuilder.option(StringOption("autoMessages", "msg", ID, autoMessage));
-            optionGroupBuilder.option(booleanOption("autoMessages", "command", ID, autoMessage));
-            optionGroupBuilder.option(booleanOption("autoMessages", "chat", ID, autoMessage));
-            optionGroupBuilder.option(booleanOption("autoMessages", "party_message", ID, autoMessage));
-            optionGroupBuilder.option(booleanOption("autoMessages", "sound", ID, autoMessage));
-            optionGroupBuilder.option(StringOption("autoMessages", "sound_id", ID, autoMessage));
-
-            optionGroupBuilder.collapsed(true);
-            configCategoryBuilder.group(optionGroupBuilder.build());
+            configCategoryBuilder.group(autoMessageGroup(autoMessage, i, ID)); i++;
         }
+
+
+        configCategoryBuilder.option(addButton(NeedyFesa.configManager.staticAutoMessages, 1, ID));
         return configCategoryBuilder.build();
+    }
+
+    private static OptionGroup replaceMessageGroup(JsonObject replacementMessage, int i, String ID) {
+        OptionGroup.Builder optionGroupBuilder = OptionGroup.createBuilder();
+
+        optionGroupBuilder.name(Text.of("Text replacement #" + i));
+
+        optionGroupBuilder.option(booleanOption("replaceMessages", "enabled", ID, replacementMessage));
+        optionGroupBuilder.option(StringOption("replaceMessages", "text", ID, replacementMessage));
+        optionGroupBuilder.option(StringOption("replaceMessages", "msg", ID, replacementMessage));
+        optionGroupBuilder.option(deleteButton(NeedyFesa.configManager.staticAutoMessages.getAsJsonArray(), replacementMessage, 2, ID));
+
+        optionGroupBuilder.collapsed(true);
+        return optionGroupBuilder.build();
+    }
+
+    private static OptionGroup autoMessageGroup(JsonObject autoMessage, int i, String ID) {
+        OptionGroup.Builder optionGroupBuilder = OptionGroup.createBuilder();
+
+        optionGroupBuilder.name(Text.of("Chat Listener #" + i));
+
+        optionGroupBuilder.option(booleanOption("autoMessages", "enabled", ID, autoMessage));
+        optionGroupBuilder.option(StringOption("autoMessages", "regex", ID, autoMessage));
+        optionGroupBuilder.option(booleanOption("autoMessages", "regex_matching", ID, autoMessage));
+        optionGroupBuilder.option(StringOption("autoMessages", "msg", ID, autoMessage));
+        optionGroupBuilder.option(booleanOption("autoMessages", "command", ID, autoMessage));
+        optionGroupBuilder.option(booleanOption("autoMessages", "chat", ID, autoMessage));
+        optionGroupBuilder.option(booleanOption("autoMessages", "party_message", ID, autoMessage));
+        optionGroupBuilder.option(booleanOption("autoMessages", "sound", ID, autoMessage));
+        optionGroupBuilder.option(StringOption("autoMessages", "sound_id", ID, autoMessage));
+        optionGroupBuilder.option(deleteButton(NeedyFesa.configManager.staticAutoMessages.getAsJsonArray(), autoMessage, 1, ID));
+
+        optionGroupBuilder.collapsed(true);
+        return optionGroupBuilder.build();
+    }
+
+    private static Option<Integer> addButton(ConfigObjectClass configObjectClass, int topCategory, String ID) {
+        return Option.createBuilder(int.class)
+                .name(Text.translatable(ID + ".button.add"))
+                .binding(
+                        0,
+                        () -> 0,
+                        (value) -> {
+                            for (int times = 0; times < value; times++ ) {
+                                configObjectClass.addDefaultToArray();
+                            }
+                            MinecraftClient.getInstance().setScreen(NeedyFesaConfigScreens.baseScreen(null, topCategory));
+                        }
+                )
+                .controller(opt -> new IntegerSliderController(opt, 0, 5, 1))
+                .build();
+    }
+
+    private static Option<Boolean> deleteButton(JsonArray toDeleteIn, JsonObject toDelete, int topCategory, String ID) {
+        return Option.createBuilder(Boolean.class)
+                .name(Text.translatable(ID + ".button.delete"))
+                .binding(
+                        false,
+                        () -> false,
+                        (value) -> {
+                            if (value) {
+                                toDeleteIn.remove(toDelete);
+                                MinecraftClient.getInstance().setScreen(NeedyFesaConfigScreens.baseScreen(null, topCategory));
+                            }
+                        }
+                )
+                .controller(TickBoxController::new)
+                .build();
+
     }
 
     private static Option<String> listStringOption(String category, String s, String ID, JsonObject json, List<String> lst, String current, HashMap<String, Integer> converter, HashMap<Integer, String> converterInv) {

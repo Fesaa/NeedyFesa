@@ -64,5 +64,8 @@
   "needyfesa.AutoVote.LuckyIslands": "Solo Lucky Blocks",
   "needyfesa.AutoVote.LuckyIslands.desc": "Modify what you vote for in Solo Lucky Blocks",
   "needyfesa.AutoVote.LuckyIslands.leftVoteId": "Lucky Blocks",
-  "needyfesa.AutoVote.LuckyIslands.rightVoteId": "Time"
+  "needyfesa.AutoVote.LuckyIslands.rightVoteId": "Time",
+
+  "needyfesa.button.delete": "Delete on save",
+  "needyfesa.button.add": "Add n new instances"
 }
