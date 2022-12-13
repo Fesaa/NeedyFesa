@@ -121,6 +121,7 @@ public class NeedyFesaConfigScreens {
     }
 
     private static ConfigCategory general(String ID) {
+        JsonObject needyFesaConfig = NeedyFesa.configManager.needyFesaConfig.getAsJsonObject();
         ConfigCategory.Builder configCategoryBuild = ConfigCategory.createBuilder();
 
         List<String> lst = NeedyFesa.configManager.staticLobbyChestLocations.getAsJsonObject().keySet().stream().toList();
@@ -134,23 +135,16 @@ public class NeedyFesaConfigScreens {
         configCategoryBuild.name(Text.translatable(ID + ".general.title"));
         configCategoryBuild.tooltip(Text.translatable(ID + ".general.desc"));
 
-        configCategoryBuild.option(booleanOption("general", "autoVote", ID, NeedyFesa.configManager.needyFesaConfig.getAsJsonObject()));
-        configCategoryBuild.option(booleanOption("general", "autoMessages", ID, NeedyFesa.configManager.needyFesaConfig.getAsJsonObject()));
-        configCategoryBuild.option(booleanOption("general", "chatReplacement", ID, NeedyFesa.configManager.needyFesaConfig.getAsJsonObject()));
-        configCategoryBuild.option(booleanOption("general", "chestFinder", ID, NeedyFesa.configManager.needyFesaConfig.getAsJsonObject()));
+        configCategoryBuild.option(booleanOption("general", "autoVote", ID, needyFesaConfig));
+        configCategoryBuild.option(booleanOption("general", "autoMessages", ID, needyFesaConfig));
+        configCategoryBuild.option(booleanOption("general", "chatReplacement", ID, needyFesaConfig));
+        configCategoryBuild.option(booleanOption("general", "chestFinder", ID, needyFesaConfig));
         configCategoryBuild.option(listStringOption("general", "current-event", ID, NeedyFesa.configManager.staticLobbyChestLocations.getAsJsonObject(), event_list, current_event));
-        configCategoryBuild.option(booleanOption("general", "spam-prevention", ID, NeedyFesa.configManager.needyFesaConfig.getAsJsonObject()));
-        configCategoryBuild.option(booleanOption("general", "development-mode", ID, NeedyFesa.configManager.needyFesaConfig.getAsJsonObject()));
-        configCategoryBuild.option(Option.createBuilder(int.class)
-                        .name(Text.translatable(ID + ".general.maxChatHistory"))
-                        .tooltip(Text.translatable(ID + ".general.maxChatHistory.desc"))
-                        .binding(
-                                NeedyFesa.configManager.needyFesaConfig.get("maxChatHistory").getAsInt(),
-                                () -> NeedyFesa.configManager.needyFesaConfig.get("maxChatHistory").getAsInt(),
-                                (value) -> NeedyFesa.configManager.needyFesaConfig.getAsJsonObject().addProperty("maxChatHistory", value)
-                        )
-                        .controller(opt -> new IntegerSliderController(opt, 100, 10000, 10))
-                .build());
+        configCategoryBuild.option(booleanOption("general", "spam-prevention", ID, needyFesaConfig));
+        configCategoryBuild.option(booleanOption("general", "development-mode", ID, needyFesaConfig));
+        configCategoryBuild.option(scrollIntButton("general", "maxChatHistory", ID, needyFesaConfig, 100, 10000, 10));
+        configCategoryBuild.option(booleanOption("general", "customTime", ID,  needyFesaConfig));
+        configCategoryBuild.option(scrollIntButton("general", "timeOfDay", ID, needyFesaConfig, 0, 23000, 1000));
 
         return configCategoryBuild.build();
     }
@@ -220,6 +214,19 @@ public class NeedyFesaConfigScreens {
 
         optionGroupBuilder.collapsed(true);
         return optionGroupBuilder.build();
+    }
+
+    private static Option<Integer> scrollIntButton(String category, String s, String ID, JsonObject json, int min, int max, int interval) {
+        return Option.createBuilder(int.class)
+                .name(Text.translatable(ID + "." + category + "." + s))
+                .tooltip(Text.translatable(ID + "." + category + "." +s + ".desc"))
+                .binding(
+                        json.get(s).getAsInt(),
+                        () -> json.get(s).getAsInt(),
+                        (value) -> json.addProperty(s, value)
+                )
+                .controller(opt -> new IntegerSliderController(opt, min, max, interval))
+                .build();
     }
 
     private static Option<Integer> addButton(ConfigObjectClass configObjectClass, int topCategory, String ID) {
