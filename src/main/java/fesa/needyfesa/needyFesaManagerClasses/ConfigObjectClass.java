@@ -100,9 +100,9 @@ public class ConfigObjectClass {
     public void save() {
         String jsonString;
         if (this.defaultJsonObject == null) {
-            jsonString = this.defaultJsonArray.toString();
+            jsonString = this.jsonArrayData.toString();
         } else {
-            jsonString = this.defaultJsonObject.toString();
+            jsonString = this.jsonObjectData.toString();
         }
         writeToFile(jsonString);
     }

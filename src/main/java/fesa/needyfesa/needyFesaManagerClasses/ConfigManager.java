@@ -41,6 +41,7 @@ public class ConfigManager {
         JsonArray autoMessagesJson = new JsonArray();
 
         JsonObject autoMessagesExample = new JsonObject();
+        autoMessagesExample.addProperty("enabled", false);
         autoMessagesExample.addProperty("regex", "");
         autoMessagesExample.addProperty("msg", "");
         autoMessagesExample.addProperty("command", false);
@@ -58,6 +59,7 @@ public class ConfigManager {
         JsonArray replaceMessagesJson = new JsonArray();
 
         JsonObject replaceMessageExample = new JsonObject();
+        replaceMessageExample.addProperty("enabled", false);
         replaceMessageExample.addProperty("text", "");
         replaceMessageExample.addProperty("msg", "");
 
@@ -82,6 +84,9 @@ public class ConfigManager {
         needyFesaConfigJson.addProperty("spam-prevention", true);
         needyFesaConfigJson.addProperty("spam-time", 5);
         needyFesaConfigJson.addProperty("spam-count", 3);
+        needyFesaConfigJson.addProperty("autoMessages", true);
+        needyFesaConfigJson.addProperty("chatReplacement", true);
+        needyFesaConfigJson.addProperty("chestFinder", true);
 
         JsonArray spamPreventionServersList = new JsonArray();
         spamPreventionServersList.add("play.cubecraft.net");

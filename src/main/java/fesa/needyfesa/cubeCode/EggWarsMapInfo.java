@@ -73,7 +73,7 @@ public class EggWarsMapInfo {
             String partyMessage = req.get(1);
             assert MinecraftClient.getInstance().player != null;
             if (partyMessage != null) {
-                MinecraftClient.getInstance().player.sendChatMessage(partyMessage, Text.of(partyMessage));
+                MinecraftClient.getInstance().player.sendMessage(Text.of(partyMessage));
             }
         }
     }

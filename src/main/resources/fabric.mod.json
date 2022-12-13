@@ -21,6 +21,9 @@
   "entrypoints": {
     "main": [
       "fesa.needyfesa.NeedyFesa"
+    ],
+    "modmenu": [
+      "fesa.needyfesa.GUI.ModMenuIntegration"
     ]
   },
   "mixins": [

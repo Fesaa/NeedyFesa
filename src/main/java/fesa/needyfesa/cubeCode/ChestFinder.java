@@ -12,7 +12,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.chunk.WorldChunk;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public class ChestFinder {
                 s.append("§3Found a chest @§2 ").append(chest.getX()).append(", ").append(chest.getY()).append(", ").append(chest.getZ()).append("§6!\n");
             }
             MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.of(String.valueOf(s)));
-            SoundEvent sound = Registry.SOUND_EVENT.get(new Identifier("entity.experience_orb.pickup"));
+            SoundEvent sound = SoundEvent.of(new Identifier("entity.experience_orb.pickup"));
             assert MinecraftClient.getInstance().world != null;
             assert MinecraftClient.getInstance().player != null;
             MinecraftClient.getInstance().world.playSound(MinecraftClient.getInstance().player.getX(), MinecraftClient.getInstance().player.getY(),
@@ -39,7 +38,7 @@ public class ChestFinder {
             BlockPos partyChest = chests.get(0);
             if (VarManager.partyStatus && (VarManager.currentChestCoords != partyChest || VarManager.chestPartyAnnounce < 3)) {
                 String msg = "@&3Found a chest @&2 " + partyChest.getX() + ", " + partyChest.getY() + ", " + partyChest.getZ() + "&6!";
-                MinecraftClient.getInstance().player.sendChatMessage(msg, Text.of(msg));
+                MinecraftClient.getInstance().player.networkHandler.sendChatMessage(msg);
                 if (VarManager.currentChestCoords != partyChest) {
                     VarManager.chestPartyAnnounce = 0;
                 } else {

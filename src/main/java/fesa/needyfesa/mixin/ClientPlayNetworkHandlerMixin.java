@@ -54,9 +54,7 @@ public class ClientPlayNetworkHandlerMixin {
 
     private void waitForScoreBoard(@NotNull ClientWorld world) {
         if (world.getScoreboard().getObjectiveForSlot(1) == null) {
-            Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()).schedule(() -> {
-                        waitForScoreBoard(world);
-            }
+            Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()).schedule(() -> waitForScoreBoard(world)
             , 100, TimeUnit.MILLISECONDS);
         } else {
             toRun(Objects.requireNonNull(world.getScoreboard().getObjectiveForSlot(1)));

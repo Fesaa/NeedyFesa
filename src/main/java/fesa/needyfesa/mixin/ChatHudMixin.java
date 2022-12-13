@@ -13,7 +13,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,54 +31,57 @@ public class ChatHudMixin {
 		assert MinecraftClient.getInstance().player != null;
 		ClientPlayerEntity p = MinecraftClient.getInstance().player;
 
-		for (int i = 0; i < NeedyFesa.configManager.staticAutoMessages.size(); i++) {
-			JsonObject autoMessage = NeedyFesa.configManager.staticAutoMessages.get(i).getAsJsonObject();
-			String regexString = autoMessage.get("regex").getAsString();
+		if (NeedyFesa.configManager.needyFesaConfig.get("autoMessages").getAsBoolean()) {
+			for (int i = 0; i < NeedyFesa.configManager.staticAutoMessages.size(); i++) {
+				JsonObject autoMessage = NeedyFesa.configManager.staticAutoMessages.get(i).getAsJsonObject();
+				if (!autoMessage.get("enabled").getAsBoolean()) {continue;}
+				String regexString = autoMessage.get("regex").getAsString();
 
-			regexString = regexString.replace("&player", p.getName().getString());
+				regexString = regexString.replace("&player", p.getName().getString());
 
-			String msg = autoMessage.get("msg").getAsString();
-			boolean alreadyMatched = false;
+				String msg = autoMessage.get("msg").getAsString();
+				boolean alreadyMatched = false;
 
-			if (autoMessage.get("regex_matching").getAsBoolean()) {
-				Matcher matcher = NeedyFesa.configManager.configCompiledRegex.get(msg).matcher(message.getString());
-				if (matcher.matches()) {
-					alreadyMatched = true;
-					for (int j = 0; j < matcher.groupCount(); j++) {
-						msg = msg.replace("&" + (j+1), matcher.group(j+1));
+				if (autoMessage.get("regex_matching").getAsBoolean()) {
+					Matcher matcher = NeedyFesa.configManager.configCompiledRegex.get(msg).matcher(message.getString());
+					if (matcher.matches()) {
+						alreadyMatched = true;
+						for (int j = 0; j < matcher.groupCount(); j++) {
+							msg = msg.replace("&" + (j+1), matcher.group(j+1));
+						}
+					} else {
+						continue;
 					}
-				} else {
-					continue;
-				}
-			}
-
-			if (alreadyMatched || message.getString().matches(regexString)) {
-				if (autoMessage.get("command").getAsBoolean()) {
-					p.sendCommand(msg);
 				}
 
-				if (autoMessage.get("chat").getAsBoolean()) {
-					p.sendChatMessage(msg, Text.of(msg));
-				}
+				if (alreadyMatched || message.getString().matches(regexString)) {
+					if (autoMessage.get("command").getAsBoolean()) {
+						p.networkHandler.sendCommand(msg);
+					}
 
-				if (autoMessage.get("party_message").getAsBoolean() && VarManager.partyStatus) {
-					p.sendChatMessage("@" + msg, Text.of("@" + msg));
-				}
+					if (autoMessage.get("chat").getAsBoolean()) {
+						p.networkHandler.sendChatMessage(msg);
+					}
 
-				if (autoMessage.get("sound").getAsBoolean()) {
-					this.playSound(autoMessage.get("sound_id").getAsString());
+					if (autoMessage.get("party_message").getAsBoolean() && VarManager.partyStatus) {
+						p.networkHandler.sendChatMessage("@" + msg);
+					}
+
+					if (autoMessage.get("sound").getAsBoolean()) {
+						this.playSound(autoMessage.get("sound_id").getAsString());
+					}
 				}
 			}
 		}
 
 		// Chest Finder
-		if (message.getString().matches("A chest has been hidden somewhere in the Lobby with some goodies inside!")) {
+		if (message.getString().matches("A chest has been hidden somewhere in the Lobby with some goodies inside!")
+			&& NeedyFesa.configManager.needyFesaConfig.get("chestFinder").getAsBoolean()) {
 			Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()).schedule(() -> {
 				if (VarManager.name.equals("CubeCraft")) {
-					ChestFinder.chestRequest(10);
+					ChestFinder.chestRequest(15);
 				}
 			}, 1000, TimeUnit.MILLISECONDS);
-
 		}
 
 		// Party Status tracker
@@ -98,7 +100,7 @@ public class ChatHudMixin {
 	}
 
 	private void playSound(String s) {
-		SoundEvent sound = Registry.SOUND_EVENT.get(new Identifier(s));
+		SoundEvent sound = SoundEvent.of(new Identifier(s));
 		assert MinecraftClient.getInstance().world != null;
 		assert MinecraftClient.getInstance().player != null;
 		MinecraftClient.getInstance().world.playSound(MinecraftClient.getInstance().player.getX(), MinecraftClient.getInstance().player.getY(),
