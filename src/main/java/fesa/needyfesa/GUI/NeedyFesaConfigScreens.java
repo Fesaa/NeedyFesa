@@ -144,7 +144,7 @@ public class NeedyFesaConfigScreens {
         configCategoryBuild.option(booleanOption("general", "development-mode", ID, needyFesaConfig));
         configCategoryBuild.option(scrollIntButton("general", "maxChatHistory", ID, needyFesaConfig, 100, 10000, 10));
         configCategoryBuild.option(booleanOption("general", "customTime", ID,  needyFesaConfig));
-        configCategoryBuild.option(scrollIntButton("general", "timeOfDay", ID, needyFesaConfig, 0, 23000, 1000));
+        configCategoryBuild.option(scrollIntButton("general", "timeOfDay", ID, needyFesaConfig, 0, 23, 1));
 
         return configCategoryBuild.build();
     }

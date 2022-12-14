@@ -8,7 +8,7 @@
   "needyfesa.general.customTime": "Fix your time of the day?",
   "needyfesa.general.customTime.desc": "This will override any time setting, anywhere.",
   "needyfesa.general.timeOfDay": "Time of the day",
-  "needyfesa.general.timeOfDay.desc": "0: 6 in the morning.\n23000: 5 in the morning.",
+  "needyfesa.general.timeOfDay.desc": "24 hour clock. Zero is midnight.",
   "needyfesa.general.autoMessages": "Chat Listener",
   "needyfesa.general.autoMessages.desc": "Disable or enable the Chat Listener globally. Customise its features in the Chat Listener category.",
   "needyfesa.general.chatReplacement": "Chat Replacement",
