@@ -73,5 +73,9 @@
   "needyfesa.AutoVote.LuckyIslands.rightVoteId": "Time",
 
   "needyfesa.button.delete": "Delete on save",
-  "needyfesa.button.add": "Add n new instances"
+  "needyfesa.button.add": "Add n new instances",
+
+  "needyfesa.confirmDisconnect": "Quit?",
+  "needyfesa.confirmDisconnect.toTitle": "Quit to the Title Screen",
+  "needyfesa.confirmDisconnect.quitMinecraft": "Quit Minecraft"
 }

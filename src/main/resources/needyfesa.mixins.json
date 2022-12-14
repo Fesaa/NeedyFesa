@@ -8,8 +8,10 @@
     "ChatScreenMixin",
     "ClientPlayNetworkHandlerMixin",
     "ClientWorldMixin",
+    "GameMenuScreenMixin",
     "LivingEntityRendererMixin",
-    "MinecraftClientMixin"
+    "MinecraftClientMixin",
+    "TitleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
