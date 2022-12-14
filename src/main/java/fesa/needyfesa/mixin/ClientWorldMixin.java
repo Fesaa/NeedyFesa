@@ -20,7 +20,7 @@ public abstract class ClientWorldMixin {
     @Environment(EnvType.CLIENT)
     public void setTimeOfDay(long time, CallbackInfo ci) {
         if (NeedyFesa.configManager.needyFesaConfig.get("customTime").getAsBoolean()) {
-            this.clientWorldProperties.setTimeOfDay((NeedyFesa.configManager.needyFesaConfig.get("timeOfDay").getAsInt()- 6)%24 * 10000L);
+            this.clientWorldProperties.setTimeOfDay(((NeedyFesa.configManager.needyFesaConfig.get("timeOfDay").getAsInt()- 6)%24) * 1000L);
         } else {
             ci.cancel();
         }
